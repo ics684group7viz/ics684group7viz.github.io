@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Parallel Lives: Urban vs. Rural America</title>
+  
+  <!-- Font Awesome for Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #1e40af;
+      --secondary-color: #047857;
+      --accent-color: #dc2626;
+      --background-color: #f8fafc;
+      --card-background: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --success: #059669;
+      --error: #dc2626;
+      --transition-speed: 0.3s;
+      --border-radius: 8px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+      --font-family: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+
+    /* Navigation Bar */
+    .navbar {
+      background: var(--card-background);
+      padding: 1.25rem 2rem;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .navbar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .navbar h1 {
+      font-size: 1.75rem;
+      color: var(--primary-color);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .navbar .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .navbar .nav-links a {
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 500;
+      transition: color var(--transition-speed) ease;
+    }
+
+    .navbar .nav-links a:hover {
+      color: var(--secondary-color);
+    }
+
+    /* Hero Section with Image */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 40vh;
+      background-image: url('https://www.brookings.edu/wp-content/uploads/2020/12/shutterstock_1844215003.jpg?quality=75'); /* Replace with a relevant image */
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    /* Overlay for better text visibility */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+      pointer-events: none; /* Prevents overlay from blocking clicks */
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2; /* Ensures it sits above the overlay */
+      max-width: 800px;
+      padding: 0 1rem;
+    }
+
+    .hero h2 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .hero .cta-button {
+      padding: 0.75rem 1.5rem;
+      background-color: var(--secondary-color);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .hero .cta-button:hover {
+      background-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    /* Overview Section */
+    .overview {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto 2rem auto;
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .overview h3 {
+      font-size: 1.75rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .overview p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    /* Intended Audience Section */
+    .audience {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto 2rem auto;
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .audience h3 {
+      font-size: 1.75rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .audience ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .audience li {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background: #f1f5f9;
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+      cursor: default;
+    }
+
+    .audience li:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .audience li i {
+      font-size: 1.5rem;
+      color: var(--secondary-color);
+      margin-top: 0.25rem;
+    }
+
+    .audience li div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .audience li div span {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .audience li div p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* Project Focus Section */
+    .focus {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto 2rem auto;
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .focus h3 {
+      font-size: 1.75rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .focus ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .focus li {
+      background: #f1f5f9;
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+      cursor: default;
+    }
+
+    .focus li:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .focus li h4 {
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .focus li p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Story Section */
+    .story {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto 2rem auto;
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .story h3 {
+      font-size: 1.75rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .story p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    /* Explore Visualizations Section */
+    .explore {
+      padding: 2rem;
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+      max-width: 1200px;
+      margin: 0 auto 2rem auto;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .explore h3 {
+      font-size: 1.75rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .explore .visualization-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    /* Updated Styles for Visualization Links */
+    .visualization-card {
+      background: #f1f5f9;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      padding: 1rem;
+      transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+      cursor: default; /* Removed cursor: pointer; */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border: 1px solid rgba(0,0,0,0.05);
+      position: relative;
+      overflow: hidden;
+      pointer-events: none; /* Prevents div from capturing pointer events */
+    }
+
+    /* New Class for Visualization Links */
+    .visualization-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .visualization-link:hover .visualization-card {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .visualization-link:hover .visualization-card::after {
+      opacity: 1;
+    }
+
+    .visualization-link:hover .visualization-card img {
+      transform: scale(1.05);
+    }
+
+    .visualization-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(4, 120, 135, 0.1);
+      opacity: 0;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .visualization-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: var(--border-radius);
+      margin-bottom: 1rem;
+      transition: transform var(--transition-speed) ease;
+    }
+
+    .visualization-card h4 {
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .visualization-card p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--card-background);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .footer p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .hero h2 {
+        font-size: 2.5rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .navbar h1 {
+        font-size: 1.5rem;
+      }
+
+      .audience ul {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+
+      .focus ul {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+
+      .explore .visualization-cards {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        height: 60vh;
+      }
+
+      .hero h2 {
+        font-size: 2rem;
+      }
+
+      .hero p {
+        font-size: 0.95rem;
+      }
+
+      .navbar h1 {
+        font-size: 1.25rem;
+      }
+
+      .audience ul {
+        grid-template-columns: 1fr;
+      }
+
+      .focus ul {
+        grid-template-columns: 1fr;
+      }
+
+      .explore .visualization-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero {
+        height: 40vh;
+      }
+
+      .hero h2 {
+        font-size: 1.75rem;
+      }
+
+      .hero p {
+        font-size: 0.9rem;
+      }
+
+      .navbar h1 {
+        font-size: 1rem;
+      }
+
+      .audience li {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .audience li i {
+        margin-bottom: 0.5rem;
+      }
+
+      .focus ul, .explore .visualization-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .visualization-card img {
+        height: 120px;
+      }
+
+      .visualization-card h4 {
+        font-size: 1.1rem;
+      }
+
+      .visualization-card p {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container">
+      <h1>Parallel Lives: Urban vs. Rural America</h1>
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#audience">Audience</a>
+        <a href="#focus">Focus</a>
+        <a href="#explore">Visualizations</a>
+        <!-- Optional: Add more links as needed -->
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Hero Section with Image -->
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Understanding America's Urban and Rural Divide</h2>
+      <p>Comparing population dynamics, poverty rates, education levels, and unemployment rates across the United States through innovative, interactive visualizations.</p>
+      <a href="#explore" class="cta-button">Explore Visualizations</a>
+    </div>
+  </section>
+  
+  <!-- Overview Section -->
+  <section class="overview" id="overview">
+    <h3>Project Overview</h3>
+    <p>
+      "Parallel Lives: Urban vs. Rural America" focuses on comparing urban and rural population dynamics, including poverty rates, education levels, and unemployment rates. Utilizing datasets from the U.S. Census Bureau, U.S. Department of Agriculture's Economic Research Service (USDA ERS), and U.S. Bureau of Labor Statistics, this project aims to create innovative, interactive visualizations that highlight the differences between rural and urban populations across the United States.
+    </p>
+  </section>
+  
+  <!-- Intended Audience Section -->
+  <section class="audience" id="audience">
+    <h3>Intended Audience</h3>
+    <ul>
+      <li>
+        <i class="fas fa-user-shield"></i>
+        <div>
+          <span>Policymakers and Government Agencies</span>
+          <p>Inform decisions on resource allocation for education and poverty alleviation.</p>
+        </div>
+      </li>
+      <li>
+        <i class="fas fa-user-tie"></i>
+        <div>
+          <span>Researchers and Data Analysts</span>
+          <p>Study population dynamics and socio-economic gaps between rural and urban areas.</p>
+        </div>
+      </li>
+      <li>
+        <i class="fas fa-users"></i>
+        <div>
+          <span>General Public and Educators</span>
+          <p>Raise awareness about urban-rural disparities; serve as a teaching tool.</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  
+  <!-- Project Focus Section -->
+  <section class="focus" id="focus">
+    <h3>Project Focus</h3>
+    <ul>
+      <li>
+        <h4>Population Trends</h4>
+        <p>
+          Urban areas exhibit significant growth, while rural populations experience slower expansion or decline. Visualizations highlight regional population shifts across the country.
+        </p>
+      </li>
+      <li>
+        <h4>Poverty Rates</h4>
+        <p>
+          Side-by-side comparisons reveal economic disparities, with rural areas facing higher poverty rates than their urban counterparts.
+        </p>
+      </li>
+      <li>
+        <h4>Educational Attainment</h4>
+        <p>
+          Illustrates the educational attainment gap, showing that rural populations have lower levels of education, which impacts economic opportunities in these areas.
+        </p>
+      </li>
+      <li>
+        <h4>Unemployment Rates</h4>
+        <p>
+          Both urban and rural areas see increased unemployment during economic downturns, but urban areas often recover more quickly. Visualizations highlight disparities in recovery times.
+        </p>
+      </li>
+    </ul>
+  </section>
+  
+  <!-- Story Section -->
+  <section class="story">
+    <h3>The Story</h3>
+    <p>
+      "Parallel Lives: Urban vs. Rural America" aims to provoke thought and discussion on the evolving dynamics between urban and rural communities. Through interactive visualizations, users can engage with data to explore socio-economic divides, uncover key trends affecting these communities, and gain insights into the unique challenges shaping them. The project serves as a tool for policymakers, researchers, advocates, and the general public to understand and address the disparities that influence the lives of millions across the United States.
+    </p>
+  </section>
+  
+  <!-- Explore Visualizations Section -->
+  <section class="explore" id="explore">
+    <h3>Explore Our Visualizations</h3>
+    <div class="visualization-cards">
+      
+      <!-- Population Dynamics Visualization Card -->
+      <a href="PopulationDynamics.html" class="visualization-link">
+        <div class="visualization-card" tabindex="0" aria-label="View Population Dynamics Visualization">
+          <img src="https://news.virginia.edu/sites/default/files/Header_SF_CooperStats_JD.jpg" alt="Population Dynamics Visualization showing Urban and Rural population growth over years">
+          <h4>Population Dynamics</h4>
+          <p>
+            Explore two decades of demographic shifts across the United States. Click to view detailed trends and distributions.
+          </p>
+        </div>
+      </a>
+      
+      <!-- Education Levels Visualization Card -->
+      <a href="education.html" class="visualization-link">
+        <div class="visualization-card" tabindex="0" aria-label="View Education Levels Visualization">
+          <img src="#" alt="Education Levels Visualization showing educational attainment in urban and rural areas">
+          <h4>Education Levels</h4>
+          <p>
+            Analyze educational attainment across different states and demographics over the past 20 years.
+          </p>
+        </div>
+      </a>
+      
+      <!-- Poverty Rates Visualization Card -->
+      <a href="poverty.html" class="visualization-link">
+        <div class="visualization-card" tabindex="0" aria-label="View Poverty Rates Visualization">
+          <img src="#" alt="Poverty Rates Visualization showing poverty levels in urban and rural areas">
+          <h4>Poverty Rates</h4>
+          <p>
+            Understand the trends in poverty across various regions and populations throughout two decades.
+          </p>
+        </div>
+      </a>
+      
+      <!-- Unemployment Rates Visualization Card -->
+      <a href="unemployment.html" class="visualization-link">
+        <div class="visualization-card" tabindex="0" aria-label="View Unemployment Rates Visualization">
+          <img src="#" alt="Unemployment Rates Visualization showing unemployment trends in urban and rural areas">
+          <h4>Unemployment Rates</h4>
+          <p>
+            Delve into the unemployment statistics to gauge economic health and workforce dynamics across states.
+          </p>
+        </div>
+      </a>
+      
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2024 Group 7 - Parallel Lives: Urban vs. Rural America. All rights reserved.</p>
+  </footer>
+  
+</body>
+</html>
