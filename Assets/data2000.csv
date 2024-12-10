@@ -1,160 +1,160 @@
 Type,State,Population
-Total:,United States,115904641
-Urban:,United States,89965943
-Rural,United States,25938698
-Total:,Alabama,1963711
-Urban:,Alabama,1080683
-Rural,Alabama,883028
-Total:,Alaska,260978
-Urban:,Alaska,157834
-Rural,Alaska,103144
-Total:,Arizona,2189189
-Urban:,Arizona,1898320
-Rural,Arizona,290869
-Total:,Arkansas,1173043
-Urban:,Arkansas,610471
-Rural,Arkansas,562572
-Total:,California,12214549
-Urban:,California,11387887
-Rural,California,826662
-Total:,Colorado,1808037
-Urban:,Colorado,1481950
-Rural,Colorado,326087
-Total:,Connecticut,1385975
-Urban:,Connecticut,1218624
-Rural,Connecticut,167351
-Total:,Delaware,343072
-Urban:,Delaware,274756
-Rural,Delaware,68316
-Total:,District of Columbia,274845
-Urban:,District of Columbia,274845
-Rural,District of Columbia,0
-Total:,Florida,7302947
-Urban:,Florida,6518543
-Rural,Florida,784404
-Total:,Georgia,3281737
-Urban:,Georgia,2318660
-Rural,Georgia,963077
-Total:,Hawaii,460542
-Urban:,Hawaii,414497
-Rural,Hawaii,46045
-Total:,Idaho,527824
-Urban:,Idaho,336825
-Rural,Idaho,190999
-Total:,Illinois,4885615
-Urban:,Illinois,4267014
-Rural,Illinois,618601
-Total:,Indiana,2532319
-Urban:,Indiana,1826886
-Rural,Indiana,705433
-Total:,Iowa,1232511
-Urban:,Iowa,757030
-Rural,Iowa,475481
-Total:,Kansas,1131200
-Urban:,Kansas,804383
-Rural,Kansas,326817
-Total:,Kentucky,1750927
-Urban:,Kentucky,979209
-Rural,Kentucky,771718
-Total:,Louisiana,1847181
-Urban:,Louisiana,1331972
-Rural,Louisiana,515209
-Total:,Maine,651901
-Urban:,Maine,238651
-Rural,Maine,413250
-Total:,Maryland,2145283
-Urban:,Maryland,1852496
-Rural,Maryland,292787
-Total:,Massachusetts,2621989
-Urban:,Massachusetts,2388483
-Rural,Massachusetts,233506
-Total:,Michigan,4234279
-Urban:,Michigan,3055251
-Rural,Michigan,1179028
-Total:,Minnesota,2065946
-Urban:,Minnesota,1410064
-Rural,Minnesota,655882
-Total:,Mississippi,1161953
-Urban:,Mississippi,566071
-Rural,Mississippi,595882
-Total:,Missouri,2442017
-Urban:,Missouri,1668112
-Rural,Missouri,773905
-Total:,Montana,412633
-Urban:,Montana,214528
-Rural,Montana,198105
-Total:,Nebraska,722668
-Urban:,Nebraska,494195
-Rural,Nebraska,228473
-Total:,Nevada,827457
-Urban:,Nevada,749930
-Rural,Nevada,77527
-Total:,New Hampshire,547024
-Urban:,New Hampshire,303958
-Rural,New Hampshire,243066
-Total:,New Jersey,3310275
-Urban:,New Jersey,3133701
-Rural,New Jersey,176574
-Total:,New Mexico,780579
-Urban:,New Mexico,575071
-Rural,New Mexico,205508
-Total:,New York,7679307
-Urban:,New York,6571343
-Rural,New York,1107964
-Total:,North Carolina,3523944
-Urban:,North Carolina,2081338
-Rural,North Carolina,1442606
-Total:,North Dakota,289677
-Urban:,North Dakota,156545
-Rural,North Dakota,133132
-Total:,Ohio,4783051
-Urban:,Ohio,3775679
-Rural,Ohio,1007372
-Total:,Oklahoma,1514400
-Urban:,Oklahoma,985742
-Rural,Oklahoma,528658
-Total:,Oregon,1452709
-Urban:,Oregon,1131574
-Rural,Oregon,321135
-Total:,Pennsylvania,5249750
-Urban:,Pennsylvania,4012828
-Rural,Pennsylvania,1236922
-Total:,Rhode Island,439837
-Urban:,Rhode Island,399791
-Rural,Rhode Island,40046
-Total:,South Carolina,1753670
-Urban:,South Carolina,1073187
-Rural,South Carolina,680483
-Total:,South Dakota,323208
-Urban:,South Dakota,166786
-Rural,South Dakota,156422
-Total:,Tennessee,2439443
-Urban:,Tennessee,1551314
-Rural,Tennessee,888129
-Total:,Texas,8157575
-Urban:,Texas,6586864
-Rural,Texas,1570711
-Total:,Utah,768594
-Urban:,Utah,656387
-Rural,Utah,112207
-Total:,Vermont,294382
-Urban:,Vermont,98819
-Rural,Vermont,195563
-Total:,Virginia,2904192
-Urban:,Virginia,2074596
-Rural,Virginia,829596
-Total:,Washington,2451075
-Urban:,Washington,1993111
-Rural,Washington,457964
-Total:,West Virginia,844623
-Urban:,West Virginia,391748
-Rural,West Virginia,452875
-Total:,Wisconsin,2321144
-Urban:,Wisconsin,1527656
-Rural,Wisconsin,793488
-Total:,Wyoming,223854
-Urban:,Wyoming,139735
-Rural,Wyoming,84119
-Total:,Puerto Rico,1418476
-Urban:,Puerto Rico,1335151
-Rural,Puerto Rico,83325
+Total:,United States,283966370.0
+Urban:,United States,220416560.0
+Rural,United States,63549810.0
+Total:,Alabama,4811092.0
+Urban:,Alabama,2647673.0
+Rural,Alabama,2163419.0
+Total:,Alaska,639396.0
+Urban:,Alaska,386693.0
+Rural,Alaska,252703.0
+Total:,Arizona,5363513.0
+Urban:,Arizona,4650884.0
+Rural,Arizona,712629.0
+Total:,Arkansas,2873955.0
+Urban:,Arkansas,1495654.0
+Rural,Arkansas,1378301.0
+Total:,California,29925645.0
+Urban:,California,27900323.0
+Rural,California,2025322.0
+Total:,Colorado,4429691.0
+Urban:,Colorado,3630778.0
+Rural,Colorado,798913.0
+Total:,Connecticut,3395639.0
+Urban:,Connecticut,2985629.0
+Rural,Connecticut,410010.0
+Total:,Delaware,840526.0
+Urban:,Delaware,673152.0
+Rural,Delaware,167374.0
+Total:,District of Columbia,673370.0
+Urban:,District of Columbia,673370.0
+Rural,District of Columbia,0.0
+Total:,Florida,17892220.0
+Urban:,Florida,15970430.0
+Rural,Florida,1921790.0
+Total:,Georgia,8040256.0
+Urban:,Georgia,5680717.0
+Rural,Georgia,2359539.0
+Total:,Hawaii,1128328.0
+Urban:,Hawaii,1015518.0
+Rural,Hawaii,112810.0
+Total:,Idaho,1293169.0
+Urban:,Idaho,825221.0
+Rural,Idaho,467948.0
+Total:,Illinois,11969757.0
+Urban:,Illinois,10454184.0
+Rural,Illinois,1515572.0
+Total:,Indiana,6204182.0
+Urban:,Indiana,4475871.0
+Rural,Indiana,1728311.0
+Total:,Iowa,3019652.0
+Urban:,Iowa,1854724.0
+Rural,Iowa,1164928.0
+Total:,Kansas,2771440.0
+Urban:,Kansas,1970738.0
+Rural,Kansas,800702.0
+Total:,Kentucky,4289771.0
+Urban:,Kentucky,2399062.0
+Rural,Kentucky,1890709.0
+Total:,Louisiana,4525593.0
+Urban:,Louisiana,3263331.0
+Rural,Louisiana,1262262.0
+Total:,Maine,1597157.0
+Urban:,Maine,584695.0
+Rural,Maine,1012463.0
+Total:,Maryland,5255943.0
+Urban:,Maryland,4538615.0
+Rural,Maryland,717328.0
+Total:,Massachusetts,6423873.0
+Urban:,Massachusetts,5851783.0
+Rural,Massachusetts,572090.0
+Total:,Michigan,10373984.0
+Urban:,Michigan,7485365.0
+Rural,Michigan,2888619.0
+Total:,Minnesota,5061568.0
+Urban:,Minnesota,3454657.0
+Rural,Minnesota,1606911.0
+Total:,Mississippi,2846785.0
+Urban:,Mississippi,1386874.0
+Rural,Mississippi,1459911.0
+Total:,Missouri,5982942.0
+Urban:,Missouri,4086874.0
+Rural,Missouri,1896067.0
+Total:,Montana,1010951.0
+Urban:,Montana,525594.0
+Rural,Montana,485357.0
+Total:,Nebraska,1770537.0
+Urban:,Nebraska,1210778.0
+Rural,Nebraska,559759.0
+Total:,Nevada,2027270.0
+Urban:,Nevada,1837329.0
+Rural,Nevada,189941.0
+Total:,New Hampshire,1340209.0
+Urban:,New Hampshire,744697.0
+Rural,New Hampshire,595512.0
+Total:,New Jersey,8110174.0
+Urban:,New Jersey,7677567.0
+Rural,New Jersey,432606.0
+Total:,New Mexico,1912419.0
+Urban:,New Mexico,1408924.0
+Rural,New Mexico,503495.0
+Total:,New York,18814302.0
+Urban:,New York,16099790.0
+Rural,New York,2714512.0
+Total:,North Carolina,8633663.0
+Urban:,North Carolina,5099278.0
+Rural,North Carolina,3534385.0
+Total:,North Dakota,709709.0
+Urban:,North Dakota,383535.0
+Rural,North Dakota,326173.0
+Total:,Ohio,11718475.0
+Urban:,Ohio,9250414.0
+Rural,Ohio,2468061.0
+Total:,Oklahoma,3710280.0
+Urban:,Oklahoma,2415068.0
+Rural,Oklahoma,1295212.0
+Total:,Oregon,3559137.0
+Urban:,Oregon,2772356.0
+Rural,Oregon,786781.0
+Total:,Pennsylvania,12861888.0
+Urban:,Pennsylvania,9831429.0
+Rural,Pennsylvania,3030459.0
+Total:,Rhode Island,1077601.0
+Urban:,Rhode Island,979488.0
+Rural,Rhode Island,98113.0
+Total:,South Carolina,4296492.0
+Urban:,South Carolina,2629308.0
+Rural,South Carolina,1667183.0
+Total:,South Dakota,791860.0
+Urban:,South Dakota,408626.0
+Rural,South Dakota,383234.0
+Total:,Tennessee,5976635.0
+Urban:,Tennessee,3800719.0
+Rural,Tennessee,2175916.0
+Total:,Texas,19986059.0
+Urban:,Texas,16137817.0
+Rural,Texas,3848242.0
+Total:,Utah,1883055.0
+Urban:,Utah,1608148.0
+Rural,Utah,274907.0
+Total:,Vermont,721236.0
+Urban:,Vermont,242107.0
+Rural,Vermont,479129.0
+Total:,Virginia,7115270.0
+Urban:,Virginia,5082760.0
+Rural,Virginia,2032510.0
+Total:,Washington,6005134.0
+Urban:,Washington,4883122.0
+Rural,Washington,1122012.0
+Total:,West Virginia,2069326.0
+Urban:,West Virginia,959783.0
+Rural,West Virginia,1109544.0
+Total:,Wisconsin,5686803.0
+Urban:,Wisconsin,3742757.0
+Rural,Wisconsin,1944046.0
+Total:,Wyoming,548442.0
+Urban:,Wyoming,342351.0
+Rural,Wyoming,206092.0
+Total:,Puerto Rico,3475266.0
+Urban:,Puerto Rico,3271120.0
+Rural,Puerto Rico,204146.0

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Parallel Lives: Urban vs. Rural America (2000-2020)</title>
@@ -8,1270 +8,977 @@
     <!-- Plotly.js -->
     <script src="https://cdn.plot.ly/plotly-2.25.0.min.js"></script>
 
-    <!-- Font Awesome for Icons -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-      rel="stylesheet"
-    />
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
 
     <!-- Google Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
     <style>
-      :root {
-        --primary-color: #1e40af;
-        --secondary-color: #047857;
-        --accent-color: #dc2626;
-        --background-color: #f8fafc;
-        --card-background: #ffffff;
-        --text-primary: #0f172a;
-        --text-secondary: #475569;
-        --success: #059669;
-        --error: #dc2626;
-        --transition-speed: 0.3s;
-        --border-radius: 8px;
-        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-          0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-          0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        --font-family: "Inter", sans-serif;
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: var(--font-family);
-        background-color: var(--background-color);
-        color: var(--text-primary);
-        min-height: 100vh;
-        line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
-      }
-
-      /* Navigation Bar */
-      .navbar {
-        background: var(--card-background);
-        padding: 1.25rem 2rem;
-        box-shadow: var(--shadow-md);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      }
-
-      .navbar .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: 1400px;
-        margin: 0 auto;
-      }
-
-      .navbar h2 {
-        font-size: 1.75rem;
-        color: var(--primary-color);
-        font-weight: 700;
-        letter-spacing: -0.025em;
-      }
-
-      .navbar .nav-links {
-        display: flex;
-        gap: 1.5rem;
-      }
-
-      .navbar .nav-links a {
-        text-decoration: none;
-        color: var(--text-primary);
-        font-weight: 500;
-        transition: color var(--transition-speed) ease;
-      }
-
-      .navbar .nav-links a:hover {
-        color: var(--secondary-color);
-      }
-
-      /* Header Styles */
-      .header {
-        text-align: center;
-        margin-bottom: 3rem;
-        padding: 2rem 0;
-      }
-
-      .header h1 {
-        font-size: 2.75rem;
-        color: var(--text-primary);
-        margin-bottom: 1rem;
-        font-weight: 800;
-        letter-spacing: -0.025em;
-        line-height: 1.2;
-      }
-
-      .header p {
-        font-size: 1.2rem;
-        color: var(--text-secondary);
-        max-width: 700px;
-        margin: 0 auto;
-        line-height: 1.8;
-      }
-
-      /* Timeline Styles */
-      .timeline-container {
-        margin: 2rem auto;
-        max-width: 600px;
-        padding: 1.75rem;
-        background: var(--card-background);
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow-md);
-        transition: all var(--transition-speed) ease;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-      }
-
-      .timeline-container:hover {
-        box-shadow: var(--shadow-lg);
-        transform: translateY(-2px);
-      }
-
-      .current-year {
-        text-align: center;
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: var(--primary-color);
-        margin-bottom: 1.5rem;
-        letter-spacing: -0.025em;
-      }
-
-      /* Slider Styles */
-      .timeline-slider,
-      .modal-year-slider {
-        width: 100%;
-        height: 8px;
-        -webkit-appearance: none;
-        appearance: none;
-        background: #e2e8f0;
-        border-radius: 4px;
-        outline: none;
-        margin: 1rem 0;
-        cursor: pointer;
-      }
-
-      .timeline-slider::-webkit-slider-thumb,
-      .modal-year-slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: 24px;
-        height: 24px;
-        background: var(--secondary-color);
-        border-radius: 50%;
-        cursor: pointer;
-        transition: all var(--transition-speed) ease;
-        border: 3px solid white;
-        box-shadow: var(--shadow-sm);
-      }
-
-      .timeline-slider::-webkit-slider-thumb:hover,
-      .modal-year-slider::-webkit-slider-thumb:hover {
-        transform: scale(1.1);
-        box-shadow: var(--shadow-md);
-      }
-
-      .timeline-labels {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 1rem;
-        color: var(--text-secondary);
-        font-weight: 600;
-        font-size: 0.95rem;
-      }
-
-      /* Button Styles */
-      .btn {
-        padding: 0.875rem 1.75rem;
-        border: none;
-        border-radius: var(--border-radius);
-        cursor: pointer;
-        font-weight: 600;
-        transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
-        font-size: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        letter-spacing: -0.025em;
-        box-shadow: var(--shadow-sm);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .btn::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(
-          to right,
-          rgba(255, 255, 255, 0.1),
-          rgba(255, 255, 255, 0)
-        );
-        opacity: 0;
-        transition: opacity var(--transition-speed) ease;
-      }
-
-      .btn:hover::after {
-        opacity: 1;
-      }
-
-      .btn-primary {
-        background-color: var(--secondary-color);
-        color: white;
-      }
-
-      .btn-secondary {
-        background-color: var(--accent-color);
-        color: white;
-      }
-
-      .btn-outline {
-        background-color: transparent;
-        border: 2px solid var(--secondary-color);
-        color: var(--secondary-color);
-      }
-
-      .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-      }
-
-      .btn-active {
-        box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.3);
-      }
-
-      /* Controls Container */
-      .controls {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 2.5rem;
-        padding: 1.25rem;
-        background: var(--background-color);
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow-sm);
-      }
-
-      /* Card Styles */
-      .dashboard {
-        background: var(--card-background);
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow-md);
-        padding: 2rem;
-        margin-bottom: 2rem;
-        transition: all var(--transition-speed) ease;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-      }
-
-      .dashboard:hover {
-        box-shadow: var(--shadow-lg);
-      }
-
-      .stats-panel {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 3rem;
-      }
-
-      .stat-card {
-        background: var(--card-background);
-        padding: 1.75rem;
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow-sm);
-        transition: all var(--transition-speed) ease;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .stat-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(
-          to right,
-          var(--secondary-color),
-          var(--accent-color)
-        );
-        opacity: 0;
-        transition: opacity var(--transition-speed) ease;
-      }
-
-      .stat-card:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-      }
-
-      .stat-card:hover::before {
-        opacity: 1;
-      }
-
-      .stat-card h3 {
-        margin: 0 0 0.75rem 0;
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-weight: 600;
-      }
-
-      .stat-card p {
-        margin: 0;
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        letter-spacing: -0.025em;
-      }
-
-      /* Map Styles */
-      .map-container {
-        position: relative;
-        height: 700px;
-        border-radius: var(--border-radius);
-        overflow: hidden;
-        box-shadow: var(--shadow-md);
-        background: var(--card-background);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-      }
-
-      /* Legend Styles */
-      .legend {
-        background: var(--card-background);
-        padding: 1.25rem;
-        border-radius: var(--border-radius);
-        margin-top: 1.5rem;
-        display: flex;
-        justify-content: center;
-        gap: 2rem;
-        flex-wrap: wrap;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-      }
-
-      .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        font-weight: 500;
-        padding: 0.5rem 1rem;
-        background: var(--background-color);
-        border-radius: var(--border-radius);
-        transition: all var(--transition-speed) ease;
-      }
-
-      .legend-item:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-sm);
-      }
-
-      .legend-color {
-        width: 20px;
-        height: 20px;
-        border-radius: 4px;
-      }
-
-      /* Modal Styles */
-      .modal {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: var(--card-background);
-        width: 90vw;
-        max-width: 1200px;
-        max-height: 90vh;
-        border-radius: 12px;
-        box-shadow: var(--shadow-lg);
-        z-index: 1100;
-        overflow: hidden;
-        animation: modalFadeIn 0.3s ease-out;
-      }
-
-      .modal-header {
-        padding: 1.5rem 2rem;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: var(--background-color);
-        position: sticky;
-        top: 0;
-        z-index: 2;
-      }
-
-      .modal-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-      }
-
-      .modal-title i {
-        color: var(--secondary-color);
-      }
-
-      .modal-close {
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: var(--text-secondary);
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all var(--transition-speed) ease;
-      }
-
-      .modal-close:hover {
-        background: rgba(0, 0, 0, 0.05);
-        color: var(--text-primary);
-        transform: rotate(90deg);
-      }
-
-      .modal-content {
-        padding: 2rem;
-        overflow-y: auto;
-        max-height: calc(90vh - 76px); /* Header height */
-      }
-
-      .modal-section {
-        background: var(--background-color);
-        border-radius: var(--border-radius);
-        padding: 1.75rem;
-        margin-bottom: 2rem;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        overflow: hidden; /* Prevents overflow within modal sections */
-      }
-
-      .modal-section:last-child {
-        margin-bottom: 0;
-      }
-
-      .modal-section h3 {
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-weight: 600;
-        margin-bottom: 1.25rem;
-      }
-
-      .modal-year-selector {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-        margin-bottom: 1rem;
-      }
-
-      .modal-year-selector label {
-        font-weight: 500;
-        color: var(--text-primary);
-        min-width: 80px;
-      }
-
-      .modal-year-display {
-        font-weight: 600;
-        color: var(--secondary-color);
-        min-width: 60px;
-        text-align: right;
-      }
-
-      .charts-container {
-        display: grid;
-        grid-template-columns: 1fr; /* Changed to single column */
-        gap: 2rem;
-      }
-
-      .chart-container {
-        background: var(--card-background);
-        border-radius: var(--border-radius);
-        padding: 1.25rem;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        width: 100%;
-        height: auto; /* Changed from 100% to auto */
-      }
-
-      .modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(4px);
-        z-index: 1050;
-        animation: overlayFadeIn 0.3s ease-out;
-      }
-
-      /* Loading Overlay */
-      .loading-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(255, 255, 255, 0.95);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        backdrop-filter: blur(8px);
-      }
-
-      .spinner {
-        width: 50px;
-        height: 50px;
-        border: 4px solid rgba(4, 120, 87, 0.1);
-        border-top: 4px solid var(--secondary-color);
-        border-radius: 50%;
-        animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-      }
-
-      /* Percentage Change Indicators */
-      .change-indicator {
-        font-size: 0.875rem;
-        font-weight: 500;
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        margin-left: 0.5rem;
-      }
-
-      .change-positive {
-        color: var(--success);
-        background: rgba(5, 150, 105, 0.1);
-      }
-
-      .change-negative {
-        color: var(--error);
-        background: rgba(220, 38, 38, 0.1);
-      }
-
-      /* Animations */
-      @keyframes modalFadeIn {
-        from {
-          opacity: 0;
-          transform: translate(-50%, -48%) scale(0.95);
+        :root {
+            --primary-color: #1e40af;
+            --secondary-color: #047857;
+            --accent-color: #dc2626;
+            --background-color: #f8fafc;
+            --card-background: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --success: #059669;
+            --error: #dc2626;
+            --transition-speed: 0.3s;
+            --border-radius: 8px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --font-family: "Inter", sans-serif;
         }
-        to {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(1);
-        }
-      }
 
-      @keyframes overlayFadeIn {
-        from {
-          opacity: 0;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        to {
-          opacity: 1;
-        }
-      }
 
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
 
-      /* Responsive Design */
-      @media (max-width: 1024px) {
-        /* Removed grid-template-columns adjustment to maintain single column */
-        .chart-container {
-          height: auto; /* Ensure height is auto */
-        }
-      }
-
-      @media (max-width: 768px) {
         .container {
-          padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--card-background);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .navbar .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .navbar .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            text-align: center;
         }
 
         .header h1 {
-          font-size: 2rem;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: white;
         }
 
-        .map-container {
-          height: 500px;
+        .header p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+            color: white;
         }
 
-        .controls {
-          flex-direction: column;
-        }
-
-        .btn {
-          width: 100%;
-          justify-content: center;
-        }
-
-        .modal {
-          width: 95vw;
-          max-height: 95vh;
-        }
-
-        .modal-content {
-          padding: 1.5rem;
-        }
-
-        .modal-section {
-          padding: 1.25rem;
-        }
-
-        .modal-year-selector {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-
-        .chart-container {
-          height: 300px;
-        }
-
-        .stat-card p {
-          font-size: 1.5rem;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .header h1 {
-          font-size: 1.75rem;
+        /* Timeline Container */
+        .timeline-container {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            box-shadow: var(--shadow-md);
         }
 
         .current-year {
-          font-size: 2rem;
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Timeline Slider */
+        .timeline-slider,
+        .modal-year-slider {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e2e8f0;
+            border-radius: 4px;
+            outline: none;
+            margin: 1rem 0;
+            cursor: pointer;
+        }
+
+        .timeline-slider::-webkit-slider-thumb,
+        .modal-year-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 3px solid white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .timeline-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Stats Panel */
+        .stats-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--card-background);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-card h3 {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Map Dashboard */
+        .dashboard {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 160px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-active {
+            box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.3);
+        }
+
+        /* Map Container */
+        .map-container {
+            height: 600px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Legend */
+        .legend {
+            background: var(--card-background);
+            padding: 1.25rem;
+            border-radius: var(--border-radius);
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+            transition: all 0.2s ease;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(4, 120, 87, 0.1);
+            border-top: 4px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Change Indicators */
+        .change-indicator {
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+        }
+
+        .change-positive {
+            color: var(--success);
+            background: rgba(5, 150, 105, 0.1);
+        }
+
+        .change-negative {
+            color: var(--error);
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card-background);
+            width: 90vw;
+            max-width: 1200px;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1100;
         }
 
         .modal-header {
-          padding: 1.25rem;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--background-color);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-primary);
         }
 
         .modal-content {
-          padding: 1rem;
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: calc(90vh - 76px);
+        }
+
+        .modal-section {
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1050;
+        }
+
+        /* Charts Container */
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
         }
 
         .chart-container {
-          height: 250px;
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            height: 300px;
         }
-      }
 
-      /* Ensure charts are responsive */
-      .chart-container img,
-      .chart-container canvas {
-        max-width: 100%;
-        height: auto;
-      }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar .nav-links {
+                display: none;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .map-container {
+                height: 400px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .header {
+                padding: 4rem 0;
+            }
+
+            .header h1 {
+                font-size: 3rem;
+            }
+
+            .charts-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+            /* Footer Styles */
+    .footer {
+        background: var(--card-background);
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        padding: 2rem 0;
+        margin-top: 3rem;
+        box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+
+    .footer-section h3 {
+        color: var(--primary-color);
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .footer-section p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+
+    .footer-links li {
+        margin-bottom: 0.5rem;
+    }
+
+    .footer-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: color 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .footer-links a:hover {
+        color: var(--primary-color);
+    }
+
+    .footer-bottom {
+        text-align: center;
+        padding-top: 2rem;
+        margin-top: 2rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <!-- Navigation Bar -->
     <nav class="navbar">
-      <div class="container">
-        <h2>Parallel Lives: Urban vs. Rural America (2000-2020)</h2>
-        <div class="nav-links">
-          <a href="../index.html">Home</a>
-          <a href="PopulationDynamics.html">Population Dynamics</a>
-          <a href="education.html">Education Levels</a>
-          <a href="poverty.html">Poverty Rates</a>
-          <a href="unemployment.html">Unemployment Rates</a>
-          <!-- Add more links as needed -->
+        <div class="container">
+            <h2>Parallel Lives: Urban vs. Rural America</h2>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#population">Population</a>
+                <a href="#education">Education</a>
+                <a href="#poverty">Poverty</a>
+            </div>
         </div>
-      </div>
     </nav>
 
-    <div class="container">
-      <div class="header">
-        <h1>Urban & Rural Population Analysis</h1>
-        <p>
-          Explore two decades of demographic shifts across the United States.
-          Click any state to view detailed trends and distributions.
-        </p>
-      </div>
-
-      <!-- Timeline Control -->
-      <div class="timeline-container">
-        <div class="current-year" id="currentYearMain">2020</div>
-        <input
-          type="range"
-          min="2000"
-          max="2020"
-          step="10"
-          value="2020"
-          class="timeline-slider"
-          id="yearSlider"
-          aria-label="Select Year"
-        />
-        <div class="timeline-labels">
-          <span>2000</span>
-          <span>2010</span>
-          <span>2020</span>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="container">
+            <h1>Urban & Rural Population Analysis</h1>
+            <p>Explore two decades of demographic shifts across the United States.
+               Click any state to view detailed trends and distributions.</p>
         </div>
-      </div>
-
-      <!-- National Statistics -->
-      <div class="stats-panel">
-        <div class="stat-card">
-          <h3>Total Population</h3>
-          <p id="totalPop">Loading...</p>
-        </div>
-        <div class="stat-card">
-          <h3>Urban Population</h3>
-          <p id="urbanPop">Loading...</p>
-        </div>
-        <div class="stat-card">
-          <h3>Rural Population</h3>
-          <p id="ruralPop">Loading...</p>
-        </div>
-        <div class="stat-card">
-          <h3>Most Urban State</h3>
-          <p id="mostUrban">Loading...</p>
-        </div>
-      </div>
-
-      <!-- Map Dashboard -->
-      <div class="dashboard">
-        <!-- View Controls -->
-        <div class="controls">
-          <button
-            id="urbanView"
-            class="btn btn-primary btn-active"
-            aria-pressed="true"
-          >
-            <i class="fas fa-city"></i>
-            Urban Density
-          </button>
-          <button id="ruralView" class="btn btn-secondary" aria-pressed="false">
-            <i class="fas fa-tree"></i>
-            Rural Density
-          </button>
-          <button
-            id="combinedView"
-            class="btn btn-outline"
-            aria-pressed="false"
-          >
-            <i class="fas fa-layer-group"></i>
-            Urban-Rural Balance
-          </button>
-        </div>
-
-        <!-- Map Container -->
-        <div class="map-container">
-          <div id="map"></div>
-          <div id="loading" class="loading-overlay">
-            <div class="spinner"></div>
-          </div>
-        </div>
-
-        <!-- Map Legend -->
-        <div class="legend">
-          <!-- Legend will be dynamically updated based on view mode -->
-          <div class="legend-item">
-            <div
-              class="legend-color"
-              style="background: rgb(239, 68, 68)"
-            ></div>
-            <span>Highly Urban</span>
-          </div>
-          <div class="legend-item">
-            <div
-              class="legend-color"
-              style="background: rgb(229, 229, 229)"
-            ></div>
-            <span>Balanced</span>
-          </div>
-          <div class="legend-item">
-            <div
-              class="legend-color"
-              style="background: rgb(22, 163, 74)"
-            ></div>
-            <span>Highly Rural</span>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- State Details Modal -->
-    <div
-      id="stateInfoModal"
-      class="modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modalTitle"
-    >
-      <div class="modal-header">
-        <h3 class="modal-title" id="modalTitle">
-          <i class="fas fa-chart-line"></i>
-          <span id="modalStateName">State Details</span>
-        </h3>
-        <button
-          class="modal-close"
-          onclick="closeStateInfoModal()"
-          aria-label="Close modal"
-        >
-          ×
-        </button>
-      </div>
+    <div class="container">
+        <!-- Timeline Control -->
+        <div class="timeline-container">
+            <div class="current-year" id="currentYearMain">2020</div>
+            <input type="range" min="2000" max="2020" step="10" value="2020" 
+                   class="timeline-slider" id="yearSlider" aria-label="Select Year" />
+            <div class="timeline-labels">
+                <span>2000</span>
+                <span>2010</span>
+                <span>2020</span>
+            </div>
+        </div>
 
-      <div class="modal-content">
+        <!-- National Statistics -->
+        <div class="stats-panel">
+            <div class="stat-card">
+                <h3>Total Population</h3>
+                <p id="totalPop">Loading...</p>
+            </div>
+            <div class="stat-card">
+                <h3>Urban Population</h3>
+                <p id="urbanPop">Loading...</p>
+            </div>
+            <div class="stat-card">
+                <h3>Rural Population</h3>
+                <p id="ruralPop">Loading...</p>
+            </div>
+        </div>
+
+        <!-- Map Dashboard -->
+        <div class="dashboard">
+            <div class="controls">
+                <button id="urbanView" class="btn btn-primary btn-active">
+                    <i class="fas fa-city"></i>
+                    Urban Density
+                </button>
+                <button id="ruralView" class="btn btn-secondary">
+                    <i class="fas fa-tree"></i>
+                    Rural Density
+                </button>
+                <button id="combinedView" class="btn btn-outline">
+                    <i class="fas fa-layer-group"></i>
+                    Urban-Rural Balance
+                </button>
+            </div>
+
+            <!-- Map Container -->
+            <div class="map-container">
+                <div id="map"></div>
+                <div id="loading" class="loading-overlay">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Map Legend -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgb(239, 68, 68)"></div>
+                    <span>Highly Urban</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgb(229, 229, 229)"></div>
+                    <span>Balanced</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgb(22, 163, 74)"></div>
+                    <span>Highly Rural</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- State Details Modal -->
+<div id="stateInfoModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">
+            <i class="fas fa-chart-line"></i>
+            <span id="modalStateName">State Details</span>
+        </h3>
+        <button class="modal-close" onclick="closeStateInfoModal()" aria-label="Close modal">×</button>
+    </div>
+
+    <div class="modal-content">
         <!-- Year Selection -->
         <div class="modal-section">
-          <div class="modal-year-selector">
-            <label for="modalYearSlider">Select Year:</label>
-            <input
-              type="range"
-              min="2000"
-              max="2020"
-              step="10"
-              value="2020"
-              class="modal-year-slider"
-              id="modalYearSlider"
-              aria-label="Select year for state data"
-            />
-            <span id="modalYearDisplay" class="modal-year-display">2020</span>
-          </div>
+            <div class="modal-year-selector">
+                <label for="modalYearSlider">Select Year:</label>
+                <input type="range" min="2000" max="2020" step="10" value="2020"
+                       class="modal-year-slider" id="modalYearSlider" aria-label="Select year for state data" />
+                <span id="modalYearDisplay" class="modal-year-display">2020</span>
+            </div>
         </div>
 
         <!-- State Statistics -->
         <div class="modal-section">
-          <h3>Population Statistics</h3>
-          <div class="stats-panel">
-            <div class="stat-card">
-              <h3>Urban Population</h3>
-              <p id="modalUrban">-</p>
+            <h3>Population Statistics</h3>
+            <div class="stats-panel">
+                <div class="stat-card">
+                    <h3>Urban Population</h3>
+                    <p id="modalUrban">-</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Rural Population</h3>
+                    <p id="modalRural">-</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Population</h3>
+                    <p id="modalTotal">-</p>
+                </div>
             </div>
-            <div class="stat-card">
-              <h3>Rural Population</h3>
-              <p id="modalRural">-</p>
-            </div>
-            <div class="stat-card">
-              <h3>Total Population</h3>
-              <p id="modalTotal">-</p>
-            </div>
-          </div>
         </div>
 
         <!-- Charts -->
         <div class="modal-section">
-          <div class="charts-container">
-            <!-- Population Distribution -->
-            <div class="chart-container">
-              <h3>Population Distribution</h3>
-              <div id="pieChart"></div>
+            <div class="charts-container">
+                <div class="chart-container">
+                    <h3>Population Distribution</h3>
+                    <div id="pieChart"></div>
+                </div>
+                <div class="chart-container">
+                    <h3>Population Trends (2000-2020)</h3>
+                    <div id="stateTrendChart"></div>
+                </div>
             </div>
-            <!-- Population Trends -->
-            <div class="chart-container">
-              <h3>Population Trends (2000-2020)</h3>
-              <div id="stateTrendChart"></div>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
+</div>
 
-    <!-- Modal Overlay -->
-    <div id="modalOverlay" class="modal-overlay" aria-hidden="true"></div>
-
+<!-- Modal Overlay -->
+<div id="modalOverlay" class="modal-overlay" aria-hidden="true"></div>
     <!-- JavaScript -->
     <script>
-      // Constants and utility functions
-      const geoJsonUrl =
-        "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json";
+        // JavaScript code will go here - providing in next part
+        // Constants and State Management
+const geoJsonUrl = "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json";
 
-      const STATE_NAME_MAPPING = {
-        "district of columbia": "District of Columbia",
-        "puerto rico": "Puerto Rico",
-      };
+let currentState = {
+    year: 2020,
+    selectedState: null,
+    viewMode: "urban",
+    datasets: {},
+    geoJson: null
+};
 
-      // State management
-      let currentState = {
-        year: 2020,
-        selectedState: null,
-        viewMode: "urban",
-        datasets: {},
-        geoJson: null,
-      };
+// Utility Functions
+function formatStateName(name) {
+    const cleanName = name.trim().toLowerCase();
+    return cleanName
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+}
 
-      // Format state name function
-      function formatStateName(name) {
-        const cleanName = name.trim().toLowerCase();
+function parseCSV(csvData) {
+    const rows = csvData.split("\n").slice(1);
+    const stateData = {};
 
-        if (STATE_NAME_MAPPING[cleanName]) {
-          return STATE_NAME_MAPPING[cleanName];
+    rows.forEach((row, index) => {
+        if (!row.trim()) return;
+
+        const [type, state, population] = row.split(",").map(item => item.trim());
+        if (state.toLowerCase() === "united states") return;
+
+        const formattedState = formatStateName(state);
+        if (!stateData[formattedState]) {
+            stateData[formattedState] = { urban: 0, rural: 0 };
         }
 
-        return cleanName
-          .split(" ")
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" ");
-      }
-
-      // Enhanced CSV parsing with validation
-      function parseCSV(csvData) {
-        const rows = csvData.split("\n").slice(1);
-        const stateData = {};
-
-        rows.forEach((row, index) => {
-          if (!row.trim()) return;
-
-          const [type, state, population] = row
-            .split(",")
-            .map((item) => item.trim());
-
-          // Skip United States totals
-          if (state.toLowerCase() === "united states") return;
-
-          const formattedState = formatStateName(state);
-
-          // Initialize state data if not exists
-          if (!stateData[formattedState]) {
-            stateData[formattedState] = { urban: 0, rural: 0 };
-          }
-
-          // Parse population value
-          const popValue = parseInt(population.replace(/,/g, ""));
-          if (isNaN(popValue)) {
+        const popValue = parseInt(population.replace(/,/g, ""));
+        if (isNaN(popValue)) {
             console.warn(`Invalid population value at row ${index + 2}`);
             return;
-          }
+        }
 
-          // Add population based on type
-          if (type.toLowerCase().startsWith("urban")) {
+        if (type.toLowerCase().startsWith("urban")) {
             stateData[formattedState].urban = popValue;
-          } else if (type.toLowerCase().startsWith("rural")) {
+        } else if (type.toLowerCase().startsWith("rural")) {
             stateData[formattedState].rural = popValue;
-          }
-        });
+        }
+    });
 
-        return stateData;
-      }
+    return stateData;
+}
 
-      // Calculate densities with validation
-      function calculateDensities(stateData) {
-        const densities = {};
-        Object.entries(stateData).forEach(([state, data]) => {
-          const total = data.urban + data.rural;
-          if (total > 0) {
+function calculateDensities(stateData) {
+    const densities = {};
+    Object.entries(stateData).forEach(([state, data]) => {
+        const total = data.urban + data.rural;
+        if (total > 0) {
             densities[state] = {
-              urbanDensity: data.urban / total,
-              ruralDensity: data.rural / total,
-              totalPopulation: total,
-              urbanPopulation: data.urban,
-              ruralPopulation: data.rural,
-              urbanPercentage: ((data.urban / total) * 100).toFixed(1),
-              ruralPercentage: ((data.rural / total) * 100).toFixed(1),
+                urbanDensity: data.urban / total,
+                ruralDensity: data.rural / total,
+                totalPopulation: total,
+                urbanPopulation: data.urban,
+                ruralPopulation: data.rural,
+                urbanPercentage: ((data.urban / total) * 100).toFixed(1),
+                ruralPercentage: ((data.rural / total) * 100).toFixed(1)
             };
-          }
-        });
-        return densities;
-      }
+        }
+    });
+    return densities;
+}
 
-      // Calculate percentage change
-      function calculatePercentageChange(oldValue, newValue) {
-        if (oldValue === 0) return "N/A";
-        return (((newValue - oldValue) / oldValue) * 100).toFixed(1);
-      }
+function calculatePercentageChange(oldValue, newValue) {
+    if (oldValue === 0) return "N/A";
+    return (((newValue - oldValue) / oldValue) * 100).toFixed(1);
+}
 
-      // Create pie chart
-      function createPieChart(stateName, year) {
-        if (!stateName || !currentState.datasets[year]) return;
+// Visualization Functions
+function createPieChart(stateName, year) {
+    if (!stateName || !currentState.datasets[year]) return;
 
-        const stateData = currentState.datasets[year][stateName];
-        if (!stateData) return;
+    const stateData = currentState.datasets[year][stateName];
+    if (!stateData) return;
 
-        const data = [
-          {
-            values: [stateData.urban, stateData.rural],
-            labels: ["Urban", "Rural"],
-            type: "pie",
-            marker: {
-              colors: ["rgb(239, 68, 68)", "rgb(22, 163, 74)"], // Urban Red, Rural Green
-            },
-            textinfo: "percent+value",
-            textposition: "inside",
-            hole: 0.4,
-            texttemplate: "%{percent:.1%}<br>(%{value:,})",
-            hovertemplate:
-              "<b>%{label}</b><br>Population: %{value:,}<br>Percentage: %{percent:.1%}<extra></extra>",
-          },
-        ];
+    const data = [{
+        values: [stateData.urban, stateData.rural],
+        labels: ['Urban', 'Rural'],
+        type: 'pie',
+        hole: 0.4,
+        marker: {
+            colors: ['rgb(239, 68, 68)', 'rgb(22, 163, 74)']
+        },
+        textinfo: 'percent+value',
+        textposition: 'inside',
+        hovertemplate: '<b>%{label}</b><br>' +
+                      'Population: %{value:,}<br>' +
+                      'Percentage: %{percent:.1%}<extra></extra>'
+    }];
 
-        const layout = {
-          height: 300,
-          showlegend: true,
-          legend: { orientation: "h", y: -0.2 },
-          margin: { t: 20, b: 40, l: 0, r: 0 },
-        };
+    const layout = {
+        showlegend: true,
+        legend: { orientation: 'h', y: -0.2 },
+        height: 300,
+        margin: { t: 20, r: 20, l: 20, b: 40 }
+    };
 
-        Plotly.newPlot("pieChart", data, layout, {
-          displayModeBar: false,
-          responsive: true,
-        });
-      }
+    Plotly.newPlot('pieChart', data, layout, { displayModeBar: false, responsive: true });
+}
 
-      // Create state trend chart
-      function createStateTrendChart(stateName) {
-        if (!stateName) return;
+function createStateTrendChart(stateName) {
+    if (!stateName) return;
 
-        const years = [2000, 2010, 2020];
-        const urbanData = years.map((year) => {
-          const yearData = currentState.datasets[year];
-          return yearData[stateName]?.urban || 0;
-        });
+    const years = [2000, 2010, 2020];
+    const urbanData = years.map(year => currentState.datasets[year][stateName]?.urban || 0);
+    const ruralData = years.map(year => currentState.datasets[year][stateName]?.rural || 0);
 
-        const ruralData = years.map((year) => {
-          const yearData = currentState.datasets[year];
-          return yearData[stateName]?.rural || 0;
-        });
-
-        // Calculate percentage changes
-        const urbanChanges = urbanData.map((value, index) => {
-          if (index === 0) return null;
-          return calculatePercentageChange(urbanData[index - 1], value);
-        });
-
-        const ruralChanges = ruralData.map((value, index) => {
-          if (index === 0) return null;
-          return calculatePercentageChange(ruralData[index - 1], value);
-        });
-
-        const traces = [
-          {
+    const traces = [
+        {
             x: years,
             y: urbanData,
-            name: "Urban",
-            type: "scatter",
-            mode: "lines+markers",
-            line: { color: "rgb(239, 68, 68)", width: 3 }, // Urban Red
-            marker: { size: 8 },
-            hovertemplate:
-              "<b>Urban Population</b><br>" +
-              "Population: %{y:,.0f}<extra></extra>",
-          },
-          {
+            name: 'Urban',
+            type: 'scatter',
+            mode: 'lines+markers',
+            line: { color: 'rgb(239, 68, 68)', width: 3 },
+            marker: { size: 8 }
+        },
+        {
             x: years,
             y: ruralData,
-            name: "Rural",
-            type: "scatter",
-            mode: "lines+markers",
-            line: { color: "rgb(22, 163, 74)", width: 3 }, // Rural Green
-            marker: { size: 8 },
-            hovertemplate:
-              "<b>Rural Population</b><br>" +
-              "Population: %{y:,.0f}<extra></extra>",
-          },
+            name: 'Rural',
+            type: 'scatter',
+            mode: 'lines+markers',
+            line: { color: 'rgb(22, 163, 74)', width: 3 },
+            marker: { size: 8 }
+        }
+    ];
+
+    const layout = {
+        showlegend: true,
+        legend: { orientation: 'h', y: -0.2 },
+        height: 300,
+        margin: { t: 20, r: 20, l: 90, b: 40 },
+        yaxis: {
+            title: 'Population',
+            tickformat: ',.0f'
+        },
+        xaxis: {
+            title: 'Year',
+            tickmode: 'array',
+            ticktext: years.map(String),
+            tickvals: years
+        }
+    };
+
+    Plotly.newPlot('stateTrendChart', traces, layout, { displayModeBar: false, responsive: true });
+}
+
+function createChoroplethTrace(type, isCombined = false) {
+    const densities = calculateDensities(currentState.datasets[currentState.year]);
+    const locations = [];
+    const values = [];
+    const text = [];
+
+    currentState.geoJson.features.forEach(feature => {
+        const stateName = feature.properties.name;
+        locations.push(stateName);
+
+        if (densities[stateName]) {
+            const value = isCombined ? 
+                densities[stateName].urbanDensity - densities[stateName].ruralDensity :
+                type === "urbanDensity" ? densities[stateName].urbanDensity : densities[stateName].ruralDensity;
+            
+            text.push(`<b>${stateName}</b><br>` +
+                     `Year: ${currentState.year}<br>` +
+                     `Total Population: ${densities[stateName].totalPopulation.toLocaleString()}<br>` +
+                     `Urban: ${densities[stateName].urbanPercentage}%<br>` +
+                     `Rural: ${densities[stateName].ruralPercentage}%<br>` +
+                     `<i>Click for detailed trends</i>`);
+            values.push(value);
+        } else {
+            text.push(`${stateName}<br>No data available`);
+            values.push(0);
+        }
+    });
+
+    const colorScale = isCombined ?
+        [
+            [-1, "rgb(22, 163, 74)"],    // Rural
+            [0, "rgb(229, 229, 229)"],   // Balanced
+            [1, "rgb(239, 68, 68)"]      // Urban
+        ] :
+        [
+            [0, type === "urbanDensity" ? "rgb(255, 180, 180)" : "rgb(134, 239, 172)"],
+            [0.5, type === "urbanDensity" ? "rgb(239, 68, 68)" : "rgb(22, 163, 74)"],
+            [1, type === "urbanDensity" ? "rgb(179, 0, 0)" : "rgb(0, 102, 0)"]
         ];
 
-        const layout = {
-          height: 300,
-          showlegend: true,
-          legend: { orientation: "h", y: -0.2 },
-          yaxis: {
-            title: "Population",
-            tickformat: ",.0f",
-            gridcolor: "rgba(0,0,0,0.1)",
-          },
-          xaxis: {
-            title: "Year",
-            tickmode: "array",
-            ticktext: years.map(String),
-            tickvals: years,
-            gridcolor: "rgba(0,0,0,0.1)",
-          },
-          hovermode: "closest",
-          margin: { t: 20, r: 20, l: 85, b: 40 },
-        };
-
-        Plotly.newPlot("stateTrendChart", traces, layout, {
-          displayModeBar: false,
-          responsive: true,
-        });
-      }
-
-      // Create choropleth trace
-      function createChoroplethTrace(type, isCombined = false) {
-        const densities = calculateDensities(
-          currentState.datasets[currentState.year]
-        );
-        const locations = [];
-        const values = [];
-        const text = [];
-
-        if (isCombined) {
-          currentState.geoJson.features.forEach((feature) => {
-            const stateName = feature.properties.name;
-            locations.push(stateName);
-
-            if (densities[stateName]) {
-              const urbanValue = densities[stateName].urbanDensity;
-              const ruralValue = densities[stateName].ruralDensity;
-              const total =
-                densities[stateName].totalPopulation.toLocaleString();
-              const balance = urbanValue - ruralValue;
-
-              text.push(
-                `<b>${stateName}</b><br>` +
-                  `Year: ${currentState.year}<br>` +
-                  `Urban: ${(urbanValue * 100).toFixed(1)}% (${densities[
-                    stateName
-                  ].urbanPopulation.toLocaleString()})<br>` +
-                  `Rural: ${(ruralValue * 100).toFixed(1)}% (${densities[
-                    stateName
-                  ].ruralPopulation.toLocaleString()})<br>` +
-                  `Total Population: ${total}<br>` +
-                  `<i>Click for detailed trends</i>`
-              );
-              values.push(balance);
-            } else {
-              text.push(`${stateName}<br>No data available`);
-              values.push(0);
-            }
-          });
-
-          return {
-            type: "choropleth",
-            locationmode: "geojson-id",
-            locations: locations,
-            z: values,
-            text: text,
-            hovertemplate: "%{text}<extra></extra>",
-            geojson: currentState.geoJson,
-            featureidkey: "properties.name",
-            colorscale: [
-              [-1, "rgb(22, 163, 74)"], // Highly Rural - Green
-              [-0.5, "rgb(134, 239, 172)"], // Light Rural - Light Green
-              [0, "rgb(229, 229, 229)"], // Balanced - Grey
-              [0.5, "rgb(255, 180, 180)"], // Light Urban - Light Red
-              [1, "rgb(239, 68, 68)"], // Highly Urban - Red
-            ],
-            zmin: -1,
-            zmax: 1,
-            showscale: true,
-            marker: { line: { color: "white", width: 1 } },
-            colorbar: {
-              title: {
-                text: "Urban-Rural Balance",
-                font: {
-                  size: 14,
-                  family: "Inter, sans-serif",
-                  color: "#1e293b",
-                },
-              },
-              ticktext: ["Highly Rural", "Mixed", "Highly Urban"],
-              tickvals: [-1, 0, 1],
-              tickmode: "array",
-              thickness: 20,
-              outlinewidth: 0,
-              tickfont: { family: "Inter, sans-serif", color: "#64748b" },
+    return {
+        type: "choropleth",
+        locationmode: "geojson-id",
+        locations: locations,
+        z: values,
+        text: text,
+        hovertemplate: "%{text}<extra></extra>",
+        geojson: currentState.geoJson,
+        featureidkey: "properties.name",
+        colorscale: colorScale,
+        zmin: isCombined ? -1 : 0,
+        zmax: 1,
+        showscale: true,
+        marker: { line: { color: "white", width: 1 } },
+        colorbar: {
+            title: {
+                text: isCombined ? "Urban-Rural Balance" : 
+                      type === "urbanDensity" ? "Urban Density" : "Rural Density",
+                font: { size: 14, family: "Inter, sans-serif" }
             },
-          };
-        } else {
-          currentState.geoJson.features.forEach((feature) => {
-            const stateName = feature.properties.name;
-            locations.push(stateName);
-
-            if (densities[stateName]) {
-              const value =
-                type === "urbanDensity"
-                  ? densities[stateName].urbanDensity
-                  : densities[stateName].ruralDensity;
-              const population =
-                type === "urbanDensity"
-                  ? densities[stateName].urbanPopulation
-                  : densities[stateName].ruralPopulation;
-
-              text.push(
-                `<b>${stateName}</b><br>` +
-                  `Year: ${currentState.year}<br>` +
-                  `${type === "urbanDensity" ? "Urban" : "Rural"}: ${(
-                    value * 100
-                  ).toFixed(1)}%<br>` +
-                  `Population: ${population.toLocaleString()}<br>` +
-                  `Total Population: ${densities[
-                    stateName
-                  ].totalPopulation.toLocaleString()}<br>` +
-                  `<i>Click for detailed trends</i>`
-              );
-              values.push(value);
-            } else {
-              text.push(`${stateName}<br>No data available`);
-              values.push(0);
-            }
-          });
-
-          const colorScale =
-            type === "urbanDensity"
-              ? [
-                  [0, "rgb(255, 180, 180)"], // Light Urban - Light Red
-                  [0.5, "rgb(239, 68, 68)"], // Highly Urban - Red
-                  [1, "rgb(179, 0, 0)"], // Extreme Urban - Dark Red
-                ]
-              : [
-                  [0, "rgb(22, 163, 74)"], // Highly Rural - Green
-                  [0.5, "rgb(134, 239, 172)"], // Light Rural - Light Green
-                  [1, "rgb(0, 102, 0)"], // Extreme Rural - Dark Green
-                ];
-
-          return {
-            type: "choropleth",
-            locationmode: "geojson-id",
-            locations: locations,
-            z: values,
-            text: text,
-            hovertemplate: "%{text}<extra></extra>",
-            geojson: currentState.geoJson,
-            featureidkey: "properties.name",
-            colorscale: colorScale,
-            zmin: 0,
-            zmax: 1,
-            showscale: true,
-            marker: { line: { color: "white", width: 1 } },
-            colorbar: {
-              title: {
-                text: `${type === "urbanDensity" ? "Urban" : "Rural"} Density`,
-                font: {
-                  size: 14,
-                  family: "Inter, sans-serif",
-                  color: "#1e293b",
-                },
-              },
-              tickformat: ".0%",
-              thickness: 20,
-              outlinewidth: 0,
-              tickfont: { family: "Inter, sans-serif", color: "#64748b" },
-            },
-          };
+            thickness: 20,
+            tickformat: isCombined ? "" : ".0%"
         }
-      }
+    };
+}
 
-      // Create standard layout
-      function createStandardLayout() {
-        return {
-          geo: {
+function updateStatistics() {
+    const yearData = currentState.datasets[currentState.year];
+    if (!yearData) return;
+
+    let totalUrban = 0;
+    let totalRural = 0;
+
+    Object.entries(yearData).forEach(([state, data]) => {
+        totalUrban += data.urban;
+        totalRural += data.rural;
+    });
+
+    // Calculate percentage changes
+    const prevYear = currentState.year - 10;
+    const prevYearData = prevYear >= 2000 ? currentState.datasets[prevYear] : null;
+
+    if (prevYearData) {
+        let prevTotalUrban = 0;
+        let prevTotalRural = 0;
+        Object.values(prevYearData).forEach(data => {
+            prevTotalUrban += data.urban;
+            prevTotalRural += data.rural;
+        });
+
+        const urbanChange = calculatePercentageChange(prevTotalUrban, totalUrban);
+        const ruralChange = calculatePercentageChange(prevTotalRural, totalRural);
+
+        document.getElementById("urbanPop").innerHTML = `
+            ${totalUrban.toLocaleString()}
+            <span class="change-indicator ${urbanChange >= 0 ? 'change-positive' : 'change-negative'}">
+                ${urbanChange >= 0 ? '+' : ''}${urbanChange}%
+            </span>
+        `;
+
+        document.getElementById("ruralPop").innerHTML = `
+            ${totalRural.toLocaleString()}
+            <span class="change-indicator ${ruralChange >= 0 ? 'change-positive' : 'change-negative'}">
+                ${ruralChange >= 0 ? '+' : ''}${ruralChange}%
+            </span>
+        `;
+    } else {
+        document.getElementById("urbanPop").textContent = totalUrban.toLocaleString();
+        document.getElementById("ruralPop").textContent = totalRural.toLocaleString();
+    }
+
+    document.getElementById("totalPop").textContent = (totalUrban + totalRural).toLocaleString();
+}
+
+function updateVisualization() {
+    const trace = createChoroplethTrace(
+        currentState.viewMode === "combined" ? "combined" :
+        currentState.viewMode === "rural" ? "ruralDensity" : "urbanDensity",
+        currentState.viewMode === "combined"
+    );
+
+    const layout = {
+        geo: {
             scope: "usa",
             projection: { type: "albers usa" },
             showlakes: true,
@@ -1279,346 +986,242 @@
             showland: true,
             landcolor: "rgb(250, 250, 250)",
             showcountries: true,
-            countrycolor: "rgb(200, 200, 200)",
-            showsubunits: true,
-            subunitcolor: "rgb(200, 200, 200)",
-            resolution: 50,
-          },
-          margin: { t: 0, b: 0, l: 0, r: 0 },
-          dragmode: false,
-          transition: {
-            duration: 500,
-            easing: "cubic-in-out",
-          },
-        };
-      }
+            countrycolor: "rgb(200, 200, 200)"
+        },
+        margin: { t: 0, b: 0, l: 0, r: 0 },
+        dragmode: false
+    };
 
-      // Update statistics
-      function updateStatistics() {
-        const yearData = currentState.datasets[currentState.year];
-        if (!yearData) return;
-
-        let totalUrban = 0;
-        let totalRural = 0;
-        let maxUrbanPct = 0;
-        let mostUrbanState = "";
-
-        Object.entries(yearData).forEach(([state, data]) => {
-          totalUrban += data.urban;
-          totalRural += data.rural;
-          const urbanPct = data.urban / (data.urban + data.rural);
-          if (urbanPct > maxUrbanPct) {
-            maxUrbanPct = urbanPct;
-            mostUrbanState = state;
-          }
-        });
-
-        // Calculate percentage changes from previous decade
-        const prevYear = currentState.year - 10;
-        const prevYearData =
-          prevYear >= 2000 ? currentState.datasets[prevYear] : null;
-
-        if (prevYearData) {
-          let prevTotalUrban = 0;
-          let prevTotalRural = 0;
-          Object.values(prevYearData).forEach((data) => {
-            prevTotalUrban += data.urban;
-            prevTotalRural += data.rural;
-          });
-
-          const urbanChange = calculatePercentageChange(
-            prevTotalUrban,
-            totalUrban
-          );
-          const ruralChange = calculatePercentageChange(
-            prevTotalRural,
-            totalRural
-          );
-
-          document.getElementById("urbanPop").innerHTML = `
-          ${totalUrban.toLocaleString()}
-          <span class="change-indicator ${
-            urbanChange >= 0 ? "change-positive" : "change-negative"
-          }">
-            ${urbanChange >= 0 ? "+" : ""}${urbanChange}%
-          </span>
-        `;
-
-          document.getElementById("ruralPop").innerHTML = `
-          ${totalRural.toLocaleString()}
-          <span class="change-indicator ${
-            ruralChange >= 0 ? "change-positive" : "change-negative"
-          }">
-            ${ruralChange >= 0 ? "+" : ""}${ruralChange}%
-          </span>
-        `;
-        } else {
-          document.getElementById("urbanPop").textContent =
-            totalUrban.toLocaleString();
-          document.getElementById("ruralPop").textContent =
-            totalRural.toLocaleString();
-        }
-
-        document.getElementById("totalPop").textContent = (
-          totalUrban + totalRural
-        ).toLocaleString();
-        document.getElementById(
-          "mostUrban"
-        ).textContent = `${mostUrbanState} (${(maxUrbanPct * 100).toFixed(
-          1
-        )}%)`;
-      }
-
-      // Update visualization
-      function updateVisualization() {
-        const trace = createChoroplethTrace(
-          currentState.viewMode === "combined"
-            ? "combined"
-            : currentState.viewMode === "rural"
-            ? "ruralDensity"
-            : "urbanDensity",
-          currentState.viewMode === "combined"
-        );
-
-        Plotly.newPlot("map", [trace], createStandardLayout(), {
-          responsive: true,
-          displayModeBar: false,
-        }).then(() => {
-          // Reattach event handlers
-          const mapDiv = document.getElementById("map");
-          mapDiv.on("plotly_click", (data) => {
+    Plotly.newPlot("map", [trace], layout, {
+        responsive: true,
+        displayModeBar: false
+    }).then(() => {
+        const mapDiv = document.getElementById("map");
+        mapDiv.on("plotly_click", (data) => {
             if (data.points && data.points[0]) {
-              const stateName = data.points[0].location;
-              showStateDetails(stateName);
+                showStateDetails(data.points[0].location);
             }
-          });
         });
+    });
 
-        updateStatistics();
-        updateLegend(currentState.viewMode);
-      }
+    updateStatistics();
+    updateLegend(currentState.viewMode);
+}
 
-      // Show state details
-      function showStateDetails(stateName) {
-        currentState.selectedState = stateName;
-        document.getElementById("modalStateName").textContent = stateName;
+function showStateDetails(stateName) {
+    currentState.selectedState = stateName;
+    document.getElementById("modalStateName").textContent = stateName;
+    document.getElementById("stateInfoModal").style.display = "block";
+    document.getElementById("modalOverlay").style.display = "block";
 
-        // Show modal first
-        document.getElementById("stateInfoModal").style.display = "block";
-        document.getElementById("modalOverlay").style.display = "block";
+    const modalYearSlider = document.getElementById("modalYearSlider");
+    modalYearSlider.value = currentState.year;
+    
+    updateModalContent(stateName, currentState.year);
+}
 
-        // Reset modal year slider to current year
-        const modalYearSlider = document.getElementById("modalYearSlider");
-        modalYearSlider.value = currentState.year;
+function closeStateInfoModal() {
+    document.getElementById("stateInfoModal").style.display = "none";
+    document.getElementById("modalOverlay").style.display = "none";
+}
 
-        // Use requestAnimationFrame to ensure modal is visible before rendering charts
-        requestAnimationFrame(() => {
-          updateModalContent(stateName, currentState.year);
-        });
-      }
+function updateModalContent(stateName, year) {
+    if (!stateName || !currentState.datasets[year]) return;
 
-      // Close state modal
-      function closeStateInfoModal() {
-        document.getElementById("stateInfoModal").style.display = "none";
-        document.getElementById("modalOverlay").style.display = "none";
-      }
+    const stateData = currentState.datasets[year][stateName];
+    if (!stateData) return;
 
-      // Update legend
-      function updateLegend(viewMode) {
-        const legend = document.querySelector(".legend");
-        const legendContent =
-          viewMode === "combined"
-            ? `
-        <div class="legend-item">
-          <div class="legend-color" style="background: rgb(22, 163, 74)"></div>
-          <span>Highly Rural</span>
-        </div>
-        <div class="legend-item">
-          <div class="legend-color" style="background: rgb(229,229,229)"></div>
-          <span>Balanced</span>
-        </div>
-        <div class="legend-item">
-          <div class="legend-color" style="background: rgb(239, 68, 68)"></div>
-          <span>Highly Urban</span>
-        </div>
-      `
-            : `
-        <div class="legend-item">
-          <div class="legend-color" style="background: ${
-            viewMode === "urban" ? "rgb(239, 68, 68)" : "rgb(22, 163, 74)"
-          }"></div>
-          <span>High ${viewMode === "urban" ? "Urban" : "Rural"} Density</span>
-        </div>
-      `;
+    document.getElementById("modalYearDisplay").textContent = year;
 
-        legend.innerHTML = legendContent;
-      }
+    // Update statistics with change indicators
+    const prevYear = year - 10;
+    const prevData = prevYear >= 2000 ? currentState.datasets[prevYear][stateName] : null;
 
-      // Setup event handlers
-      function setupEventHandlers() {
-        // Year slider
-        const yearSlider = document.getElementById("yearSlider");
-        yearSlider.addEventListener("input", (e) => {
-          const year = parseInt(e.target.value);
-          if (currentState.year !== year) {
+    const urbanChange = prevData ? calculatePercentageChange(prevData.urban, stateData.urban) : null;
+    const ruralChange = prevData ? calculatePercentageChange(prevData.rural, stateData.rural) : null;
+
+    document.getElementById("modalUrban").innerHTML = `
+        ${stateData.urban.toLocaleString()}
+        ${urbanChange !== null ? `
+            <span class="change-indicator ${urbanChange >= 0 ? 'change-positive' : 'change-negative'}">
+                ${urbanChange >= 0 ? '+' : ''}${urbanChange}%
+            </span>
+        ` : ''}
+    `;
+
+    document.getElementById("modalRural").innerHTML = `
+        ${stateData.rural.toLocaleString()}
+        ${ruralChange !== null ? `
+            <span class="change-indicator ${ruralChange >= 0 ? 'change-positive' : 'change-negative'}">
+                ${ruralChange >= 0 ? '+' : ''}${ruralChange}%
+            </span>
+        ` : ''}
+    `;
+
+    document.getElementById("modalTotal").textContent = 
+        (stateData.urban + stateData.rural).toLocaleString();
+
+    createPieChart(stateName, year);
+    createStateTrendChart(stateName);
+}
+
+function updateLegend(viewMode) {
+    const legend = document.querySelector(".legend");
+    legend.innerHTML = viewMode === "combined" 
+        ? `
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgb(22, 163, 74)"></div>
+                <span>Highly Rural</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgb(229,229,229)"></div>
+                <span>Balanced</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgb(239, 68, 68)"></div>
+                <span>Highly Urban</span>
+            </div>
+        `
+        : `
+            <div class="legend-item">
+                <div class="legend-color" style="background: ${
+                    viewMode === "urban" ? "rgb(239, 68, 68)" : "rgb(22, 163, 74)"
+                }"></div>
+                <span>High ${viewMode === "urban" ? "Urban" : "Rural"} Density</span>
+            </div>
+        `;
+}
+
+// Event Handlers
+function setupEventHandlers() {
+    // Year slider
+    const yearSlider = document.getElementById("yearSlider");
+    yearSlider.addEventListener("input", (e) => {
+        const year = parseInt(e.target.value);
+        if (currentState.year !== year) {
             currentState.year = year;
             document.getElementById("currentYearMain").textContent = year;
             updateVisualization();
-          }
-        });
+        }
+    });
 
-        // Modal year slider
-        const modalYearSlider = document.getElementById("modalYearSlider");
-        modalYearSlider.addEventListener("input", (e) => {
-          const year = parseInt(e.target.value);
-          if (currentState.selectedState) {
+    // Modal year slider
+    const modalYearSlider = document.getElementById("modalYearSlider");
+    modalYearSlider.addEventListener("input", (e) => {
+        const year = parseInt(e.target.value);
+        if (currentState.selectedState) {
             updateModalContent(currentState.selectedState, year);
-          }
-        });
+        }
+    });
 
-        // View mode buttons
-        ["urbanView", "ruralView", "combinedView"].forEach((id) => {
-          document.getElementById(id).addEventListener("click", () => {
-            currentState.viewMode =
-              id === "urbanView"
-                ? "urban"
-                : id === "ruralView"
-                ? "rural"
-                : "combined";
+    // View mode buttons
+    ["urbanView", "ruralView", "combinedView"].forEach((id) => {
+        document.getElementById(id).addEventListener("click", () => {
+            currentState.viewMode = id === "urbanView" ? "urban" :
+                                  id === "ruralView" ? "rural" : "combined";
             updateVisualization();
-            document
-              .querySelector(".btn-active")
-              ?.classList.remove("btn-active");
+            document.querySelector(".btn-active")?.classList.remove("btn-active");
             document.getElementById(id).classList.add("btn-active");
-          });
         });
+    });
 
-        // Modal closing
-        document
-          .getElementById("modalOverlay")
-          .addEventListener("click", closeStateInfoModal);
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape") closeStateInfoModal();
-        });
-      }
+    // Modal closing
+    document.getElementById("modalOverlay").addEventListener("click", closeStateInfoModal);
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeStateInfoModal();
+    });
+}
 
-      // Update modal content
-      function updateModalContent(stateName, year) {
-        if (!stateName || !currentState.datasets[year]) return;
+// Initialize visualization
+async function initVisualization() {
+    try {
+        document.getElementById("loading").style.display = "flex";
 
-        const stateData = currentState.datasets[year][stateName];
-        if (!stateData) return;
+        // Load all data
+        const [geoJson, data2000, data2010, data2020] = await Promise.all([
+            fetch(geoJsonUrl).then(res => res.json()),
+            fetch("./Assets/data2000.csv").then(res => res.text()),
+            fetch("./Assets/data2010.csv").then(res => res.text()),
+            fetch("./Assets/data2020.csv").then(res => res.text())
+        ]);
 
-        // Update year display
-        document.getElementById("modalYearDisplay").textContent = year;
-
-        // Update statistics with change indicators
-        const prevYear = year - 10;
-        const prevData =
-          prevYear >= 2000 ? currentState.datasets[prevYear][stateName] : null;
-
-        const urbanChange = prevData
-          ? calculatePercentageChange(prevData.urban, stateData.urban)
-          : null;
-        const ruralChange = prevData
-          ? calculatePercentageChange(prevData.rural, stateData.rural)
-          : null;
-
-        document.getElementById("modalUrban").innerHTML = `
-        ${stateData.urban.toLocaleString()}
-        ${
-          urbanChange !== null
-            ? `<span class="change-indicator ${
-                urbanChange >= 0 ? "change-positive" : "change-negative"
-              }">
-          ${urbanChange >= 0 ? "+" : ""}${urbanChange}%
-        </span>`
-            : ""
-        }
-      `;
-
-        document.getElementById("modalRural").innerHTML = `
-        ${stateData.rural.toLocaleString()}
-        ${
-          ruralChange !== null
-            ? `<span class="change-indicator ${
-                ruralChange >= 0 ? "change-positive" : "change-negative"
-              }">
-          ${ruralChange >= 0 ? "+" : ""}${ruralChange}%
-        </span>`
-            : ""
-        }
-      `;
-
-        document.getElementById("modalTotal").textContent = (
-          stateData.urban + stateData.rural
-        ).toLocaleString();
-
-        // Update charts
-        createPieChart(stateName, year);
-        createStateTrendChart(stateName);
-      }
-
-      // Initialize visualization
-      async function initVisualization() {
-        try {
-          document.getElementById("loading").style.display = "flex";
-
-          // Load all data
-          const [geoJson, data2000, data2010, data2020] = await Promise.all([
-            fetch(geoJsonUrl).then((res) => res.json()),
-            fetch("./Assets/data2000.csv").then((res) => {
-              if (!res.ok) throw new Error("Failed to load 2000 data");
-              return res.text();
-            }),
-            fetch("./Assets/data2010.csv").then((res) => {
-              if (!res.ok) throw new Error("Failed to load 2010 data");
-              return res.text();
-            }),
-            fetch("./Assets/data2020.csv").then((res) => {
-              if (!res.ok) throw new Error("Failed to load 2020 data");
-              return res.text();
-            }),
-          ]);
-
-          // Store data in current state
-          currentState.geoJson = geoJson;
-          currentState.datasets = {
+        // Store data in current state
+        currentState.geoJson = geoJson;
+        currentState.datasets = {
             2000: parseCSV(data2000),
             2010: parseCSV(data2010),
-            2020: parseCSV(data2020),
-          };
+            2020: parseCSV(data2020)
+        };
 
-          // Setup event handlers
-          setupEventHandlers();
+        // Setup event handlers
+        setupEventHandlers();
 
-          // Initial visualization
-          updateVisualization();
+        // Initial visualization
+        updateVisualization();
 
-          // Hide loading overlay
-          const loadingOverlay = document.getElementById("loading");
-          loadingOverlay.style.opacity = "0";
-          setTimeout(() => {
+        // Hide loading overlay
+        const loadingOverlay = document.getElementById("loading");
+        loadingOverlay.style.opacity = "0";
+        setTimeout(() => {
             loadingOverlay.style.display = "none";
             loadingOverlay.style.opacity = "1";
-          }, 500);
-        } catch (error) {
-          console.error("Error initializing visualization:", error);
-          document.getElementById("map").innerHTML = `
-          <div style="height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
-            <div>
-              <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ef4444; margin-bottom: 1rem;"></i>
-              <p>Error loading visualization: ${error.message}</p>
-              <p style="font-size: 0.9rem; margin-top: 0.5rem;">Please check your data files and try again.</p>
+        }, 500);
+    } catch (error) {
+        console.error("Error initializing visualization:", error);
+        document.getElementById("map").innerHTML = `
+            <div style="height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
+                <div>
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ef4444; margin-bottom: 1rem;"></i>
+                    <p>Error loading visualization: ${error.message}</p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">Please check your data files and try again.</p>
+                </div>
             </div>
-          </div>
         `;
-          document.getElementById("loading").style.display = "none";
-        }
-      }
+        document.getElementById("loading").style.display = "none";
+    }
+}
 
-      // Start visualization
-      initVisualization();
+// Start visualization
+initVisualization();
     </script>
-  </body>
+</body>
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>About This Project</h3>
+            <p>This visualization explores the demographic shifts between urban and rural populations across the United States from 2000 to 2020, providing insights into changing population patterns and regional development.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Resources</h3>
+            <ul class="footer-links">
+                <li>
+                    <a href="#"><i class="fas fa-file-alt"></i> Census Data Documentation</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-book"></i> Methodology</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-download"></i> Download Dataset</a>
+                </li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Contact</h3>
+            <ul class="footer-links">
+                <li>
+                    <a href="mailto:info@example.com"><i class="fas fa-envelope"></i> Email Us</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-question-circle"></i> FAQ</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-comment"></i> Feedback</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2024 Urban-Rural Population Analysis. All rights reserved.</p>
+    </div>
+</footer>
 </html>
