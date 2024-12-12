@@ -172,7 +172,6 @@ async function updateMap(year) {
       tooltip.style("visibility", "hidden");
     });
 
-
   // Remove the old legend before adding the new one
   svg.selectAll(".legend").remove();
 
@@ -184,15 +183,28 @@ async function updateMap(year) {
     .attr("class", "legend")
     .attr("transform", `translate(${width + margin.left + 10}, ${margin.top + 120})`);
 
-  legend.selectAll("rect")
+  // Add a white, slightly transparent background rectangle for the legend and label
+  legend.append("rect")
+    .attr("x", -80) // Position slightly to the left of the legend
+    .attr("y", -30) // Position slightly above the legend
+    .attr("width", legendWidth + 140) // Add padding around the legend
+    .attr("height", legendHeight + 60) // Add padding below the legend
+    .attr("fill", "rgba(255, 255, 255, 0.8)") // Slightly opaque white background
+    .attr("stroke", "#ccc") // Optional: border around the background
+    .attr("stroke-width", 1);
+
+  // Add the color scale rectangles for the legend
+  legend.selectAll("rect.colorScale")
     .data(d3.range(legendHeight))
     .join("rect")
+    .attr("class", "colorScale")
     .attr("x", 0)
     .attr("y", d => d)
     .attr("width", legendWidth)
     .attr("height", 1)
     .attr("fill", d => colorScale(maxRate - (d / legendHeight) * (maxRate - minRate)));
 
+  // Add the axis for the legend
   const yAxis = d3.axisRight()
     .scale(d3.scaleLinear()
       .domain([minRate, maxRate])
@@ -207,12 +219,14 @@ async function updateMap(year) {
     .selectAll("text")
     .style("font-size", "12px");
 
+  // Add the label for the legend
   legend.append("text")
     .attr("x", 0)
     .attr("y", -20)
     .attr("dy", ".35em")
     .attr("text-anchor", "middle")
     .text("Unemployment Rate");
+
 
     updateStatistics();
 }
