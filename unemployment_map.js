@@ -1,7 +1,7 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
 // Load the US counties GeoJSON data
-const counties = await d3.json("assets/counties.geojson");
+const counties = await d3.json("Assets/counties.geojson");
 
 // Combine "STATEFP" and "COUNTYFP" into "FP"
 counties.features.forEach(feature => {
@@ -14,7 +14,7 @@ let currentState = "combined";
 
 // Function to load and process Rural-Urban Continuum Codes
 async function loadRuralUrbanData() {
-  const response = await fetch("assets/Ruralurbancontinuumcodes2023.xlsx");
+  const response = await fetch("Assets/Ruralurbancontinuumcodes2023.xlsx");
   const data = await response.arrayBuffer();
 
   // Parse the Excel file
@@ -83,7 +83,7 @@ const tooltip = d3.select("body").append("div")
 // Function to load and update the map based on the selected year
 async function updateMap(year) {
   const sheetName = `laucnty${year.toString().slice(-2)}`;
-  const response = await fetch("assets/laucnty23.xlsx");
+  const response = await fetch("Assets/laucnty23.xlsx");
   const data = await response.arrayBuffer();
 
   // Parse the Excel file
