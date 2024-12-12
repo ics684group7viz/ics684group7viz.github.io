@@ -271,104 +271,137 @@
     </div>
 
     <script>
-      // Load the CSV file
-      d3.csv("Assets/povertyData2021.csv")
-        .then((data) => {
-          // Parse and clean the data
-          const ruralUrbanData = data.map((d) => ({
-            state: d.Stabr,
-            area: d.Area_name,
-            ruralUrbanCode: +d["Rural-urban_Continuum_Code_2013"], // Rural-urban classification
-            povertyRate: +d.PCTPOVALL_2021, // Overall poverty rate
+      d3.csv("Assets/povertyData2021.csv").then((data) => {
+        const ruralUrbanData = data.map((d) => ({
+          state: d.Stabr,
+          ruralUrbanCode: +d["Rural-urban_Continuum_Code_2013"],
+          povertyRate: +d.PCTPOVALL_2021,
+        }));
+
+        const ruralData = ruralUrbanData.filter((d) => d.ruralUrbanCode >= 4);
+        const urbanData = ruralUrbanData.filter((d) => d.ruralUrbanCode <= 3);
+
+        function aggregateByState(data) {
+          const grouped = d3.group(data, (d) => d.state);
+          return Array.from(grouped, ([state, values]) => ({
+            state,
+            avgPovertyRate: d3.mean(values, (d) => d.povertyRate),
           }));
+        }
 
-          // Filter rural and urban data
-          const ruralData = ruralUrbanData.filter((d) => d.ruralUrbanCode >= 4);
-          const urbanData = ruralUrbanData.filter((d) => d.ruralUrbanCode <= 3);
+        const ruralByState = aggregateByState(ruralData);
+        const urbanByState = aggregateByState(urbanData);
 
-          // Aggregate by state (average poverty rates)
-          function aggregateByState(data) {
-            const grouped = d3.group(data, (d) => d.state);
-            return Array.from(grouped, ([state, values]) => ({
-              state,
-              avgPovertyRate: d3.mean(values, (d) => d.povertyRate),
-            }));
-          }
+        // Extract state and rates
+        const ruralStates = ruralByState.map((d) => d.state);
+        const ruralRates = ruralByState.map((d) => d.avgPovertyRate);
 
-          const ruralByState = aggregateByState(ruralData);
-          const urbanByState = aggregateByState(urbanData);
+        const urbanStates = urbanByState.map((d) => d.state);
+        const urbanRates = urbanByState.map((d) => d.avgPovertyRate);
 
-          // Extract data for rural map
-          const ruralStates = ruralByState.map((d) => d.state);
-          const ruralRates = ruralByState.map((d) => d.avgPovertyRate);
+        const ruralTrace = {
+          type: "choropleth",
+          locationmode: "USA-states",
+          locations: ruralStates,
+          z: ruralRates,
+          text: ruralStates,
+          colorscale: [
+            [0, "rgb(134, 239, 172)"],
+            [0.5, "rgb(22, 163, 74)"],
+            [1, "rgb(0, 102, 0)"],
+          ],
+          colorbar: {
+            title: "Rural Poverty Rate (%)",
+            x: -0.5,
+            thickness: 15,
+          },
+          hovertemplate:
+            "<b>State:</b> %{text}<br><b>Poverty Rate:</b> %{z:.2f}%<extra></extra>",
+        };
 
-          // Extract data for urban map
-          const urbanStates = urbanByState.map((d) => d.state);
-          const urbanRates = urbanByState.map((d) => d.avgPovertyRate);
+        const urbanTrace = {
+          type: "choropleth",
+          locationmode: "USA-states",
+          locations: urbanStates,
+          z: urbanRates,
+          text: urbanStates,
+          colorscale: [
+            [0, "rgb(255, 180, 180)"],
+            [0.5, "rgb(239, 68, 68)"],
+            [1, "rgb(179, 0, 0)"],
+          ],
+          colorbar: { title: "Urban Poverty Rate (%)", thickness: 15 },
+          hovertemplate:
+            "<b>State:</b> %{text}<br><b>Poverty Rate:</b> %{z:.2f}%<extra></extra>",
+        };
 
-          // Rural map trace
-          const ruralTrace = {
-            type: "choropleth",
-            locationmode: "USA-states",
-            locations: ruralStates,
-            z: ruralRates,
-            text: ruralStates,
-            colorscale: [
-              [0, "rgb(134, 239, 172)"],
-              [0.5, "rgb(22, 163, 74)"],
-              [1, "rgb(0, 102, 0)"],
-            ],
-            colorbar: {
-              title: "Rural Poverty Rate (%)",
-              x: -0.5,
-              thickness: 15,
-            },
-            name: "Rural",
-          };
+        const layout = { geo: { scope: "usa", fixedrange: true } };
 
-          const urbanTrace = {
-            type: "choropleth",
-            locationmode: "USA-states",
-            locations: urbanStates,
-            z: urbanRates,
-            text: urbanStates,
-            colorscale: [
-              [0, "rgb(255, 180, 180)"],
-              [0.5, "rgb(239, 68, 68)"],
-              [1, "rgb(179, 0, 0)"],
-            ],
-            colorbar: { title: "Urban Poverty Rate (%)", thickness: 15 },
-            name: "Urban",
-          };
-
-          const ruralLayout = {
-            title: "Rural Poverty Rates (2021)",
-            geo: {
-              scope: "usa",
-              showlakes: true,
-              lakecolor: "rgb(255, 255, 255)",
-              fixedrange: true,
-              zoomable: false,
-            },
-          };
-
-          const urbanLayout = {
-            title: "Urban Poverty Rates (2021)",
-            geo: {
-              scope: "usa",
-              showlakes: true,
-              lakecolor: "rgb(255, 255, 255)",
-              fixedrange: true,
-              zoomable: false,
-            },
-          };
-
-          Plotly.newPlot("ruralmap", [ruralTrace], ruralLayout);
-          Plotly.newPlot("urbanmap", [urbanTrace], urbanLayout);
-        })
-        .catch((error) => {
-          console.error("Error loading the CSV file:", error);
+        Plotly.newPlot("ruralmap", [ruralTrace], {
+          title: "Rural Poverty Rates",
+          geo: layout.geo,
         });
+        Plotly.newPlot("urbanmap", [urbanTrace], {
+          title: "Urban Poverty Rates",
+          geo: layout.geo,
+        });
+
+        const ruralMap = document.getElementById("ruralmap");
+        const urbanMap = document.getElementById("urbanmap");
+
+        function updateAnnotation(targetMap, stateName, rate, titleColor) {
+          Plotly.relayout(targetMap, {
+            annotations: [
+              {
+                x: 0.5,
+                y: 1.05,
+                xref: "paper",
+                yref: "paper",
+                text: `<b>State:</b> ${stateName}<br><b>Poverty Rate:</b> ${rate.toFixed(
+                  2
+                )}%`,
+                showarrow: false,
+                font: { size: 14, color: titleColor },
+                align: "center",
+              },
+            ],
+          });
+        }
+
+        ruralMap.on("plotly_hover", (data) => {
+          const hoveredState = data.points[0].text;
+          const urbanIndex = urbanStates.indexOf(hoveredState);
+          if (urbanIndex >= 0) {
+            updateAnnotation(
+              "urbanmap",
+              hoveredState,
+              urbanRates[urbanIndex],
+              "red"
+            );
+          }
+        });
+
+        ruralMap.on("plotly_unhover", () => {
+          Plotly.relayout("urbanmap", { annotations: [] });
+        });
+
+        urbanMap.on("plotly_hover", (data) => {
+          const hoveredState = data.points[0].text;
+          const ruralIndex = ruralStates.indexOf(hoveredState);
+          if (ruralIndex >= 0) {
+            updateAnnotation(
+              "ruralmap",
+              hoveredState,
+              ruralRates[ruralIndex],
+              "green"
+            );
+          }
+        });
+
+        urbanMap.on("plotly_unhover", () => {
+          Plotly.relayout("ruralmap", { annotations: [] });
+        });
+      });
     </script>
   </body>
   <footer class="footer">
