@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Parallel Lives: Urban vs. Rural America</title>
+
+    <!-- Plotly CDN -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- D3.js for data processing -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --primary-color: #1e40af;
+        --secondary-color: #047857;
+        --accent-color: #dc2626;
+        --background-color: #f8fafc;
+        --card-background: #ffffff;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --success: #059669;
+        --error: #dc2626;
+        --transition-speed: 0.3s;
+        --border-radius: 8px;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --font-family: "Inter", sans-serif;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-family);
+        background-color: var(--background-color);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+        width: 100%;
+      }
+
+      /* Navigation */
+      .navbar {
+        background: var(--card-background);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding: 1rem 0;
+        box-shadow: var(--shadow-md);
+      }
+
+      .navbar .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .navbar h2 {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        font-weight: 700;
+      }
+
+      .navbar .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .navbar .nav-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+      }
+
+      .navbar .nav-links a:hover {
+        color: var(--primary-color);
+      }
+
+      /* Header */
+      .header {
+        background: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        color: white;
+      }
+
+      .header p {
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+        opacity: 0.9;
+        color: white;
+      }
+
+      .map-container {
+        display: flex;
+        justify-content: space-between;
+      }
+      .map {
+        width: 50%;
+        height: 600px;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .navbar .nav-links {
+          display: none;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .controls {
+          flex-direction: column;
+        }
+
+        .btn {
+          width: 100%;
+        }
+
+        .map-container {
+          height: 400px;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .header {
+          padding: 4rem 0;
+        }
+
+        .header h1 {
+          font-size: 3rem;
+        }
+
+        .charts-container {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      /* Footer Styles */
+      .footer {
+        background: var(--card-background);
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        padding: 2rem 0;
+        margin-top: 3rem;
+        box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+
+      .footer-section h3 {
+        color: var(--primary-color);
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      .footer-section p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      .footer-links {
+        list-style: none;
+        padding: 0;
+      }
+
+      .footer-links li {
+        margin-bottom: 0.5rem;
+      }
+
+      .footer-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: color 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .footer-links a:hover {
+        color: var(--primary-color);
+      }
+
+      .footer-bottom {
+        text-align: center;
+        padding-top: 2rem;
+        margin-top: 2rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="container">
+        <h2>Parallel Lives: Urban vs. Rural America</h2>
+        <div class="nav-links">
+          <a href="#home">Home</a>
+          <a href="#population">Population</a>
+          <a href="#education">Education</a>
+          <a href="#poverty">Poverty</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="header">
+      <div class="container">
+        <h1>Urban & Rural Population Analysis</h1>
+        <p>
+          This visualization compares the average poverty rates in rural and
+          urban areas across the United States in 2021. The left map shows rural
+          poverty rates, while the right map shows urban poverty rates.
+        </p>
+      </div>
+    </div>
+
+    <div class="map-container">
+      <div id="ruralmap" class="map"></div>
+      <div id="urbanmap" class="map"></div>
+    </div>
+
+    <script>
+      // Load the CSV file
+      d3.csv("Assets/povertyData2021.csv")
+        .then((data) => {
+          // Parse and clean the data
+          const ruralUrbanData = data.map((d) => ({
+            state: d.Stabr,
+            area: d.Area_name,
+            ruralUrbanCode: +d["Rural-urban_Continuum_Code_2013"], // Rural-urban classification
+            povertyRate: +d.PCTPOVALL_2021, // Overall poverty rate
+          }));
+
+          // Filter rural and urban data
+          const ruralData = ruralUrbanData.filter((d) => d.ruralUrbanCode >= 4);
+          const urbanData = ruralUrbanData.filter((d) => d.ruralUrbanCode <= 3);
+
+          // Aggregate by state (average poverty rates)
+          function aggregateByState(data) {
+            const grouped = d3.group(data, (d) => d.state);
+            return Array.from(grouped, ([state, values]) => ({
+              state,
+              avgPovertyRate: d3.mean(values, (d) => d.povertyRate),
+            }));
+          }
+
+          const ruralByState = aggregateByState(ruralData);
+          const urbanByState = aggregateByState(urbanData);
+
+          // Extract data for rural map
+          const ruralStates = ruralByState.map((d) => d.state);
+          const ruralRates = ruralByState.map((d) => d.avgPovertyRate);
+
+          // Extract data for urban map
+          const urbanStates = urbanByState.map((d) => d.state);
+          const urbanRates = urbanByState.map((d) => d.avgPovertyRate);
+
+          // Rural map trace
+          const ruralTrace = {
+            type: "choropleth",
+            locationmode: "USA-states",
+            locations: ruralStates,
+            z: ruralRates,
+            text: ruralStates,
+            colorscale: [
+              [0, "rgb(134, 239, 172)"],
+              [0.5, "rgb(22, 163, 74)"],
+              [1, "rgb(0, 102, 0)"],
+            ],
+            colorbar: {
+              title: "Rural Poverty Rate (%)",
+              x: -0.5,
+              thickness: 15,
+            },
+            name: "Rural",
+          };
+
+          const urbanTrace = {
+            type: "choropleth",
+            locationmode: "USA-states",
+            locations: urbanStates,
+            z: urbanRates,
+            text: urbanStates,
+            colorscale: [
+              [0, "rgb(255, 180, 180)"],
+              [0.5, "rgb(239, 68, 68)"],
+              [1, "rgb(179, 0, 0)"],
+            ],
+            colorbar: { title: "Urban Poverty Rate (%)", thickness: 15 },
+            name: "Urban",
+          };
+
+          const ruralLayout = {
+            title: "Rural Poverty Rates (2021)",
+            geo: {
+              scope: "usa",
+              showlakes: true,
+              lakecolor: "rgb(255, 255, 255)",
+              fixedrange: true,
+              zoomable: false,
+            },
+          };
+
+          const urbanLayout = {
+            title: "Urban Poverty Rates (2021)",
+            geo: {
+              scope: "usa",
+              showlakes: true,
+              lakecolor: "rgb(255, 255, 255)",
+              fixedrange: true,
+              zoomable: false,
+            },
+          };
+
+          Plotly.newPlot("ruralmap", [ruralTrace], ruralLayout);
+          Plotly.newPlot("urbanmap", [urbanTrace], urbanLayout);
+        })
+        .catch((error) => {
+          console.error("Error loading the CSV file:", error);
+        });
+    </script>
+  </body>
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>About This Project</h3>
+        <p>
+          This visualization explores the demographic shifts between urban and
+          rural populations across the United States from 2000 to 2020,
+          providing insights into changing population patterns and regional
+          development.
+        </p>
+      </div>
+      <div class="footer-section">
+        <h3>Resources</h3>
+        <ul class="footer-links">
+          <li>
+            <a href="#"
+              ><i class="fas fa-file-alt"></i> Census Data Documentation</a
+            >
+          </li>
+          <li>
+            <a href="#"><i class="fas fa-book"></i> Methodology</a>
+          </li>
+          <li>
+            <a href="#"><i class="fas fa-download"></i> Download Dataset</a>
+          </li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Contact</h3>
+        <ul class="footer-links">
+          <li>
+            <a href="mailto:info@example.com"
+              ><i class="fas fa-envelope"></i> Email Us</a
+            >
+          </li>
+          <li>
+            <a href="#"><i class="fas fa-question-circle"></i> FAQ</a>
+          </li>
+          <li>
+            <a href="#"><i class="fas fa-comment"></i> Feedback</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 Urban-Rural Population Analysis. All rights reserved.</p>
+    </div>
+  </footer>
+</html>
