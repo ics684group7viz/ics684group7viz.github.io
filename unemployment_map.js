@@ -10,6 +10,8 @@ counties.features.forEach(feature => {
   delete feature.properties.COUNTYFP;
 });
 
+let currentState = "combined";
+
 // Function to load and process Rural-Urban Continuum Codes
 async function loadRuralUrbanData() {
   const response = await fetch("assets/Ruralurbancontinuumcodes2023.xlsx");
@@ -116,8 +118,7 @@ async function updateMap(year) {
   const maxRate = d3.max(transformedData, d => d.rate);
 
   // Define the color scale
-  const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
-    .domain([minRate, maxRate]);
+  const colorScale = getColorScale(minRate, maxRate);
 
   // Link the transformed data with the counties
   counties.features.forEach(feature => {
@@ -132,7 +133,21 @@ async function updateMap(year) {
     .data(counties.features)
     .join("path")
     .attr("d", path)
-    .attr("fill", d => colorByRate(d.properties.data, colorScale))
+    .attr("fill", d => {
+      if (currentState === "combined") {
+        // Fill everything if the state is combined
+        return colorByRate(d.properties.data, colorScale);
+      } else if (currentState === "metro" && d.properties.type === "Metro") {
+        // Only fill metro counties if the state is metro
+        return colorByRate(d.properties.data, colorScale);
+      } else if (currentState === "nonmetro" && d.properties.type === "Nonmetro") {
+        // Only fill nonmetro counties if the state is nonmetro
+        return colorByRate(d.properties.data, colorScale);
+      } else {
+        // If the state is metro or nonmetro but the county doesn't match, color them grey
+        return "#ccc"; // grey color for non-matching counties
+      }
+    })
     .attr("stroke", "#666")
     .attr("stroke-width", 0.5)
     .on("mouseover", (event, d) => {
@@ -156,6 +171,7 @@ async function updateMap(year) {
     .on("mouseout", () => {
       tooltip.style("visibility", "hidden");
     });
+
 
   // Remove the old legend before adding the new one
   svg.selectAll(".legend").remove();
@@ -267,4 +283,30 @@ function updateStatistics() {
   document.getElementById("totalPop").textContent = totalWorkforce.toLocaleString();  // Total workforce
   document.getElementById("urbanPop").textContent = totalUrbanUnemployed.toLocaleString();  // Urban unemployed
   document.getElementById("ruralPop").textContent = totalRuralUnemployed.toLocaleString();  // Rural unemployed
+  document.getElementById("combinedView").addEventListener("click", () => updateState("combined"));
+  document.getElementById("urbanView").addEventListener("click", () => updateState("metro"));
+  document.getElementById("ruralView").addEventListener("click", () => updateState("nonmetro"));
+
+}
+
+function updateState(newState) {
+  currentState = newState;
+  updateMap(+document.getElementById("yearSlider").value);  // Reload map with the current year
+  updateStatistics();  // Recalculate statistics based on the selected state
+}
+
+function getColorScale(minRate, maxRate) {
+  if (currentState === "metro") {
+    // Red scale for Metro
+    return d3.scaleSequential(d3.interpolateReds)
+      .domain([minRate, maxRate]);
+  } else if (currentState === "nonmetro") {
+    // Green scale for Nonmetro
+    return d3.scaleSequential(d3.interpolateGreens)
+      .domain([minRate, maxRate]);
+  } else {
+    // Default YlOrRd scale for Combined
+    return d3.scaleSequential(d3.interpolateYlOrRd)
+      .domain([minRate, maxRate]);
+  }
 }
