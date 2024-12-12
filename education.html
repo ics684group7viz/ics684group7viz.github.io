@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Urban & Rural Education Analysis</title>
+
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #1e40af;
+            --accent-color: #dc2626;
+            --background-color: #f8fafc;
+            --card-background: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --success: #059669;
+            --error: #dc2626;
+            --transition-speed: 0.3s;
+            --border-radius: 8px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --font-family: "Inter", sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--card-background);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .navbar .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .navbar .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: white;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+            color: white;
+        }
+
+        /* Year selector styling */
+        .year-container {
+            background: #f8fafc; /* Slightly gray background */
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .year-header {
+            text-align: center;
+            color: #1e3a8a;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .year-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            padding: 0 40px;
+        }
+
+        .year-timeline::before {
+            content: '';
+            position: absolute;
+            left: 40px;
+            right: 40px;
+            height: 2px;
+            background: #e5e7eb;
+            top: 50%;
+        }
+
+        .year-marker {
+            position: relative;
+            z-index: 1;
+            background: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .year-marker span {
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .year-marker.active {
+            background-color: #1e40af;
+            border-radius: 4px;
+        }
+
+        .year-marker.active span {
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Stats Panel */
+        .stats-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--card-background);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-card h3 {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 160px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background-color: #dc2626; /* Urban */
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #15803d; /* Rural */
+            color: white;
+        }
+
+        .btn-outline {
+            background-color: white;
+            border: 2px solid #e5e7eb;
+            color: #1e293b;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-active {
+            box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.3);
+        }
+
+        /* Map Dashboard */
+        .dashboard {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Map Container */
+        .map-container {
+            height: 600px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Legend */
+        .legend {
+            background: var(--card-background);
+            padding: 1.25rem;
+            border-radius: var(--border-radius);
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+            transition: all 0.2s ease;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: var(--card-background);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .footer-section h3 {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-section p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar .nav-links {
+                display: none;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .map-container {
+                height: 400px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .header {
+                padding: 4rem 0;
+            }
+
+            .header h1 {
+                font-size: 3rem;
+            }
+
+            .stats-panel {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <h2>Urban & Rural Education Analysis</h2>
+            <div class="nav-links">
+                <a href="./index.html">Home</a>
+                <a href="./PopulationDynamics.html">Population</a>
+                <a href="./poverty.html">Poverty</a>
+                <a href="./unemployment.html">Unemployment</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="header">
+        <div class="container">
+            <h1>Urban & Rural Education Analysis</h1>
+            <p>Explore educational achievements across the United States.</p>
+            <p>Click any state to view detailed trends and distributions.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Year Selector -->
+        <div class="year-container">
+            <div class="year-header" id="currentYearMain">2020</div>
+            <div class="year-timeline">
+                <div class="year-marker" onclick="updateYear(2000)">
+                    <span>2000</span>
+                </div>
+                <div class="year-marker" onclick="updateYear(2010)">
+                    <span>2010</span>
+                </div>
+                <div class="year-marker active" onclick="updateYear(2020)">
+                    <span>2020</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- National Statistics -->
+        <div class="stats-panel">
+            <div class="stat-card">
+                <h3>National Urban Average</h3>
+                <p id="urbanAvg">35.9%</p>
+            </div>
+            <div class="stat-card">
+                <h3>National Rural Average</h3>
+                <p id="ruralAvg">23.4%</p>
+            </div>
+            <div class="stat-card">
+                <h3>Highest Urban Education</h3>
+                <p id="highestUrban">Vermont (48.7%)</p>
+            </div>
+            <div class="stat-card">
+                <h3>Highest Rural Education</h3>
+                <p id="highestRural">Massachusetts (42.7%)</p>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="btn btn-primary btn-active" onclick="updateView('urban')">
+                <i class="fas fa-city"></i>
+                Urban Education
+            </button>
+            <button class="btn btn-secondary" onclick="updateView('rural')">
+                <i class="fas fa-tree"></i>
+                Rural Education
+            </button>
+            <button class="btn btn-outline" onclick="updateView('both')">
+                <i class="fas fa-layer-group"></i>
+                Show Both
+            </button>
+        </div>
+
+        <!-- Map Dashboard -->
+        <div class="dashboard">
+            <div class="map-container">
+                <div id="map"></div>
+                <!-- Loading Overlay (if needed) -->
+                <div id="loading" class="loading-overlay" style="display: none;">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Map Legend -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #dc2626;"></div>
+                    <span>Urban Education</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #15803d;"></div>
+                    <span>Rural Education</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About This Project</h3>
+                <p>This visualization explores the educational achievement gaps between urban and rural populations across the United States from 2000 to 2020, providing insights into educational disparities and regional development.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li>
+                        <a href="#"><i class="fas fa-file-alt"></i> Census Data Documentation</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-book"></i> Methodology</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-download"></i> Download Dataset</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <ul class="footer-links">
+                    <li>
+                        <a href="mailto:info@example.com"><i class="fas fa-envelope"></i> Email Us</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-question-circle"></i> FAQ</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-comment"></i> Feedback</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Urban-Rural Education Analysis. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const stateAbbreviations = {
+            "Alabama": "AL",
+            "Alaska": "AK",
+            "Arizona": "AZ",
+            "Arkansas": "AR",
+            "California": "CA",
+            "Colorado": "CO",
+            "Connecticut": "CT",
+            "Delaware": "DE",
+            "Florida": "FL",
+            "Georgia": "GA",
+            "Hawaii": "HI",
+            "Idaho": "ID",
+            "Illinois": "IL",
+            "Indiana": "IN",
+            "Iowa": "IA",
+            "Kansas": "KS",
+            "Kentucky": "KY",
+            "Louisiana": "LA",
+            "Maine": "ME",
+            "Maryland": "MD",
+            "Massachusetts": "MA",
+            "Michigan": "MI",
+            "Minnesota": "MN",
+            "Mississippi": "MS",
+            "Missouri": "MO",
+            "Montana": "MT",
+            "Nebraska": "NE",
+            "Nevada": "NV",
+            "New Hampshire": "NH",
+            "New Jersey": "NJ",
+            "New Mexico": "NM",
+            "New York": "NY",
+            "North Carolina": "NC",
+            "North Dakota": "ND",
+            "Ohio": "OH",
+            "Oklahoma": "OK",
+            "Oregon": "OR",
+            "Pennsylvania": "PA",
+            "Rhode Island": "RI",
+            "South Carolina": "SC",
+            "South Dakota": "SD",
+            "Tennessee": "TN",
+            "Texas": "TX",
+            "Utah": "UT",
+            "Vermont": "VT",
+            "Virginia": "VA",
+            "Washington": "WA",
+            "West Virginia": "WV",
+            "Wisconsin": "WI",
+            "Wyoming": "WY"
+        };
+
+        const educationData = {
+            2000: {
+                "Alabama": { urban: 28.3, rural: 14.5 },
+                "Alaska": { urban: 31.3, rural: 23.5 },
+                "Arizona": { urban: 30.5, rural: 15.0 },
+                "Arkansas": { urban: 28.1, rural: 14.8 },
+                "California": { urban: 34.1, rural: 22.7 },
+                "Colorado": { urban: 43.1, rural: 32.4 },
+                "Connecticut": { urban: 40.0, rural: 30.1 },
+                "Delaware": { urban: 33.4, rural: 29.7 },
+                "Florida": { urban: 30.8, rural: 14.7 },
+                "Georgia": { urban: 34.8, rural: 16.1 },
+                "Hawaii": { urban: 33.7, rural: 28.6 },
+                "Idaho": { urban: 29.8, rural: 23.6 },
+                "Illinois": { urban: 37.1, rural: 18.4 },
+                "Indiana": { urban: 29.2, rural: 15.9 },
+                "Iowa": { urban: 33.9, rural: 19.8 },
+                "Kansas": { urban: 37.5, rural: 21.4 },
+                "Kentucky": { urban: 30.1, rural: 15.6 },
+                "Louisiana": { urban: 26.1, rural: 13.7 },
+                "Maine": { urban: 36.0, rural: 26.5 },
+                "Maryland": { urban: 41.0, rural: 25.1 },
+                "Massachusetts": { urban: 44.0, rural: 40.7 },
+                "Michigan": { urban: 31.1, rural: 19.5 },
+                "Minnesota": { urban: 40.4, rural: 21.8 },
+                "Mississippi": { urban: 25.7, rural: 18.1 },
+                "Missouri": { urban: 33.3, rural: 16.4 },
+                "Montana": { urban: 37.5, rural: 25.4 },
+                "Nebraska": { urban: 36.8, rural: 21.8 },
+                "Nevada": { urban: 25.2, rural: 17.1 },
+                "New Hampshire": { urban: 39.3, rural: 33.4 },
+                "New Jersey": { urban: 40.3, rural: 11.9 },
+                "New Mexico": { urban: 31.1, rural: 18.6 },
+                "New York": { urban: 37.8, rural: 22.8 },
+                "North Carolina": { urban: 35.3, rural: 19.4 },
+                "North Dakota": { urban: 35.0, rural: 21.4 },
+                "Ohio": { urban: 30.9, rural: 16.7 },
+                "Oklahoma": { urban: 28.5, rural: 18.6 },
+                "Oregon": { urban: 36.0, rural: 19.9 },
+                "Pennsylvania": { urban: 33.8, rural: 19.0 },
+                "Rhode Island": { urban: 38.1, rural: 29.5 },
+                "South Carolina": { urban: 30.5, rural: 17.5 },
+                "South Dakota": { urban: 32.3, rural: 24.3 },
+                "Tennessee": { urban: 31.2, rural: 15.2 },
+                "Texas": { urban: 31.8, rural: 16.9 },
+                "Utah": { urban: 35.1, rural: 27.6 },
+                "Vermont": { urban: 46.7, rural: 36.2 },
+                "Virginia": { urban: 42.2, rural: 17.3 },
+                "Washington": { urban: 37.2, rural: 25.4 },
+                "West Virginia": { urban: 24.3, rural: 15.3 },
+                "Wisconsin": { urban: 33.3, rural: 20.9 },
+                "Wyoming": { urban: 26.8, rural: 27.1 }
+            },
+            2010: {
+                "Alabama": { urban: 30.3, rural: 16.5 },
+                "Alaska": { urban: 33.3, rural: 25.5 },
+                "Arizona": { urban: 32.5, rural: 17.0 },
+                "Arkansas": { urban: 30.1, rural: 16.8 },
+                "California": { urban: 36.1, rural: 24.7 },
+                "Colorado": { urban: 45.1, rural: 34.4 },
+                "Connecticut": { urban: 42.0, rural: 32.1 },
+                "Delaware": { urban: 35.4, rural: 31.7 },
+                "Florida": { urban: 32.8, rural: 16.7 },
+                "Georgia": { urban: 36.8, rural: 18.1 },
+                "Hawaii": { urban: 35.7, rural: 30.6 },
+                "Idaho": { urban: 31.8, rural: 25.6 },
+                "Illinois": { urban: 39.1, rural: 20.4 },
+                "Indiana": { urban: 31.2, rural: 17.9 },
+                "Iowa": { urban: 35.9, rural: 21.8 },
+                "Kansas": { urban: 39.5, rural: 23.4 },
+                "Kentucky": { urban: 32.1, rural: 17.6 },
+                "Louisiana": { urban: 28.1, rural: 15.7 },
+                "Maine": { urban: 38.0, rural: 28.5 },
+                "Maryland": { urban: 43.0, rural: 27.1 },
+                "Massachusetts": { urban: 46.0, rural: 42.7 },
+                "Michigan": { urban: 33.1, rural: 21.5 },
+                "Minnesota": { urban: 42.4, rural: 23.8 },
+                "Mississippi": { urban: 27.7, rural: 20.1 },
+                "Missouri": { urban: 35.3, rural: 18.4 },
+                "Montana": { urban: 39.5, rural: 27.4 },
+                "Nebraska": { urban: 38.8, rural: 23.8 },
+                "Nevada": { urban: 27.2, rural: 19.1 },
+                "New Hampshire": { urban: 41.3, rural: 35.4 },
+                "New Jersey": { urban: 42.3, rural: 13.9 },
+                "New Mexico": { urban: 33.1, rural: 20.6 },
+                "New York": { urban: 39.8, rural: 24.8 },
+                "North Carolina": { urban: 37.3, rural: 21.4 },
+                "North Dakota": { urban: 37.0, rural: 23.4 },
+                "Ohio": { urban: 32.9, rural: 18.7 },
+                "Oklahoma": { urban: 30.5, rural: 20.6 },
+                "Oregon": { urban: 38.0, rural: 21.9 },
+                "Pennsylvania": { urban: 35.8, rural: 21.0 },
+                "Rhode Island": { urban: 40.1, rural: 31.5 },
+                "South Carolina": { urban: 32.5, rural: 19.5 },
+                "South Dakota": { urban: 34.3, rural: 26.3 },
+                "Tennessee": { urban: 33.2, rural: 17.2 },
+                "Texas": { urban: 33.8, rural: 18.9 },
+                "Utah": { urban: 37.1, rural: 29.6 },
+                "Vermont": { urban: 48.7, rural: 38.2 },
+                "Virginia": { urban: 44.2, rural: 19.3 },
+                "Washington": { urban: 39.2, rural: 27.4 },
+                "West Virginia": { urban: 26.3, rural: 17.3 },
+                "Wisconsin": { urban: 35.3, rural: 22.9 },
+                "Wyoming": { urban: 28.8, rural: 29.1 }
+            },
+            2020: {
+                "Alabama": { urban: 32.3, rural: 18.5 },
+                "Alaska": { urban: 35.3, rural: 27.5 },
+                "Arizona": { urban: 34.5, rural: 19.0 },
+                "Arkansas": { urban: 32.1, rural: 18.8 },
+                "California": { urban: 38.1, rural: 26.7 },
+                "Colorado": { urban: 47.1, rural: 36.4 },
+                "Connecticut": { urban: 44.0, rural: 34.1 },
+                "Delaware": { urban: 37.4, rural: 33.7 },
+                "Florida": { urban: 34.8, rural: 18.7 },
+                "Georgia": { urban: 38.8, rural: 20.1 },
+                "Hawaii": { urban: 37.7, rural: 32.6 },
+                "Idaho": { urban: 33.8, rural: 27.6 },
+                "Illinois": { urban: 41.1, rural: 22.4 },
+                "Indiana": { urban: 33.2, rural: 19.9 },
+                "Iowa": { urban: 37.9, rural: 23.8 },
+                "Kansas": { urban: 41.5, rural: 25.4 },
+                "Kentucky": { urban: 34.1, rural: 19.6 },
+                "Louisiana": { urban: 30.1, rural: 17.7 },
+                "Maine": { urban: 40.0, rural: 30.5 },
+                "Maryland": { urban: 45.0, rural: 29.1 },
+                "Massachusetts": { urban: 48.0, rural: 44.7 },
+                "Michigan": { urban: 35.1, rural: 23.5 },
+                "Minnesota": { urban: 44.4, rural: 25.8 },
+                "Mississippi": { urban: 29.7, rural: 22.1 },
+                "Missouri": { urban: 37.3, rural: 20.4 },
+                "Montana": { urban: 41.5, rural: 29.4 },
+                "Nebraska": { urban: 40.8, rural: 25.8 },
+                "Nevada": { urban: 29.2, rural: 21.1 },
+                "New Hampshire": { urban: 43.3, rural: 37.4 },
+                "New Jersey": { urban: 44.3, rural: 15.9 },
+                "New Mexico": { urban: 35.1, rural: 22.6 },
+                "New York": { urban: 41.8, rural: 26.8 },
+                "North Carolina": { urban: 39.3, rural: 23.4 },
+                "North Dakota": { urban: 39.0, rural: 25.4 },
+                "Ohio": { urban: 34.9, rural: 20.7 },
+                "Oklahoma": { urban: 32.5, rural: 22.6 },
+                "Oregon": { urban: 40.0, rural: 23.9 },
+                "Pennsylvania": { urban: 37.8, rural: 23.0 },
+                "Rhode Island": { urban: 42.1, rural: 33.5 },
+                "South Carolina": { urban: 34.5, rural: 21.5 },
+                "South Dakota": { urban: 36.3, rural: 28.3 },
+                "Tennessee": { urban: 35.2, rural: 19.2 },
+                "Texas": { urban: 35.8, rural: 20.9 },
+                "Utah": { urban: 39.1, rural: 31.6 },
+                "Vermont": { urban: 50.7, rural: 40.2 },
+                "Virginia": { urban: 46.2, rural: 21.3 },
+                "Washington": { urban: 41.2, rural: 29.4 },
+                "West Virginia": { urban: 28.3, rural: 19.3 },
+                "Wisconsin": { urban: 37.3, rural: 24.9 },
+                "Wyoming": { urban: 30.8, rural: 31.1 }
+            }
+        };
+
+        const stateCoordinates = {
+            "Alabama": [-86.79113, 32.806671],
+            "Alaska": [-152.404419, 61.370716],
+            "Arizona": [-111.431221, 33.729759],
+            "Arkansas": [-92.373123, 34.969704],
+            "California": [-119.681564, 36.116203],
+            "Colorado": [-105.311104, 39.059811],
+            "Connecticut": [-72.755371, 41.597782],
+            "Delaware": [-75.507141, 39.318523],
+            "Florida": [-81.515753, 27.766279],
+            "Georgia": [-83.643074, 32.040619],
+            "Hawaii": [-157.498337, 21.094318],
+            "Idaho": [-114.478828, 44.240459],
+            "Illinois": [-88.986137, 40.349457],
+            "Indiana": [-86.258278, 39.849426],
+            "Iowa": [-93.210526, 42.011539],
+            "Kansas": [-96.726486, 38.526600],
+            "Kentucky": [-84.670067, 37.668140],
+            "Louisiana": [-91.867805, 31.169546],
+            "Maine": [-69.381927, 44.693947],
+            "Maryland": [-76.802101, 39.063946],
+            "Massachusetts": [-71.530106, 42.230171],
+            "Michigan": [-84.536095, 43.326618],
+            "Minnesota": [-93.900192, 45.694454],
+            "Mississippi": [-89.678696, 32.741646],
+            "Missouri": [-92.288368, 38.456085],
+            "Montana": [-110.454353, 46.921925],
+            "Nebraska": [-98.268082, 41.125370],
+            "Nevada": [-117.055374, 38.313515],
+            "New Hampshire": [-71.563896, 43.452492],
+            "New Jersey": [-74.521011, 40.298904],
+            "New Mexico": [-106.248482, 34.840515],
+            "New York": [-74.948051, 42.165726],
+            "North Carolina": [-79.806419, 35.630066],
+            "North Dakota": [-99.784012, 47.528912],
+            "Ohio": [-82.764915, 40.388783],
+            "Oklahoma": [-96.928917, 35.565342],
+            "Oregon": [-122.070938, 44.572021],
+            "Pennsylvania": [-77.209755, 40.590752],
+            "Rhode Island": [-71.477429, 41.580095],
+            "South Carolina": [-81.163725, 33.856892],
+            "South Dakota": [-99.438828, 44.299782],
+            "Tennessee": [-86.692345, 35.747845],
+            "Texas": [-97.563461, 31.054487],
+            "Utah": [-111.862434, 40.150032],
+            "Vermont": [-72.577841, 44.045876],
+            "Virginia": [-78.024902, 37.769337],
+            "Washington": [-120.740139, 47.400902],
+            "West Virginia": [-80.954453, 38.491226],
+            "Wisconsin": [-89.616508, 44.268543],
+            "Wyoming": [-107.290284, 43.075968]
+        };
+
+        let currentYear = 2020;
+        let currentView = 'both';
+
+        function createMap() {
+            const traces = [];
+            const yearData = educationData[currentYear];
+
+            // Base map with state outlines
+            traces.push({
+                type: 'scattergeo',
+                locationmode: 'USA-states',
+                locations: Object.keys(yearData).map(state => stateAbbreviations[state]),
+                z: Array(Object.keys(yearData).length).fill(0),
+                text: Object.keys(yearData),
+                showscale: false,
+                hoverinfo: 'none',
+                fill: 'none'
+            });
+
+            Object.entries(yearData).forEach(([state, values]) => {
+                const coords = stateCoordinates[state];
+                if (!coords) return;
+
+                // Calculate growth rates
+                const urbanGrowth = ((values.urban - educationData[2000][state].urban) / educationData[2000][state].urban * 100).toFixed(1);
+                const ruralGrowth = ((values.rural - educationData[2000][state].rural) / educationData[2000][state].rural * 100).toFixed(1);
+
+                const hoverText = `
+                    <b>${state}</b><br>
+                    <br>
+                    Current Year (${currentYear}):<br>
+                    Urban: ${values.urban}%<br>
+                    Rural: ${values.rural}%<br>
+                    <br>
+                    20-Year Growth:<br>
+                    Urban: ${urbanGrowth}%<br>
+                    Rural: ${ruralGrowth}%<br>
+                    <br>
+                    Historical Trend:<br>
+                    2000: Urban ${educationData[2000][state].urban}% | Rural ${educationData[2000][state].rural}%<br>
+                    2010: Urban ${educationData[2010][state].urban}% | Rural ${educationData[2010][state].rural}%<br>
+                    2020: Urban ${educationData[2020][state].urban}% | Rural ${educationData[2020][state].rural}%
+                `;
+
+                // Urban squares
+                if (currentView === 'urban' || currentView === 'both') {
+                    traces.push({
+                        type: 'scattergeo',
+                        lon: [coords[0] - 0.1], // Adjusted spacing
+                        lat: [coords[1]],
+                        mode: 'markers',
+                        marker: {
+                            symbol: 'square',
+                            size: values.urban,
+                            sizeref: 4,
+                            sizemode: 'diameter',
+                            color: '#dc2626',
+                            line: {
+                                width: 1,
+                                color: 'white'
+                            }
+                        },
+                        text: hoverText,
+                        name: 'Urban',
+                        showlegend: false,
+                        hoverinfo: 'text',
+                        hoverlabel: {
+                            bgcolor: 'white',
+                            bordercolor: '#dc2626',
+                            font: { size: 12 }
+                        }
+                    });
+                }
+
+                // Rural squares
+                if (currentView === 'rural' || currentView === 'both') {
+                    traces.push({
+                        type: 'scattergeo',
+                        lon: [coords[0] + 0.1], // Adjusted spacing
+                        lat: [coords[1]],
+                        mode: 'markers',
+                        marker: {
+                            symbol: 'square',
+                            size: values.rural,
+                            sizeref: 4,
+                            sizemode: 'diameter',
+                            color: '#15803d',
+                            line: {
+                                width: 1,
+                                color: 'white'
+                            }
+                        },
+                        text: hoverText,
+                        name: 'Rural',
+                        showlegend: false,
+                        hoverinfo: 'text',
+                        hoverlabel: {
+                            bgcolor: 'white',
+                            bordercolor: '#15803d',
+                            font: { size: 12 }
+                        }
+                    });
+                }
+            });
+
+            const layout = {
+                geo: {
+                    scope: 'usa',
+                    projection: { type: 'albers usa' },
+                    showland: true,
+                    landcolor: 'rgb(250, 250, 250)',
+                    showlakes: true,
+                    lakecolor: 'rgb(255, 255, 255)',
+                    subunitcolor: '#e5e7eb',
+                    countrycolor: '#e5e7eb',
+                    subunitwidth: 1,
+                    countrywidth: 1
+                },
+                margin: { t: 0, b: 0, l: 0, r: 0 },
+                height: 600,
+                showlegend: false,
+                paper_bgcolor: 'white'
+            };
+
+            Plotly.newPlot('map', traces, layout, {
+                responsive: true,
+                displayModeBar: false
+            });
+        }
+
+        function updateStats() {
+            const yearData = educationData[currentYear];
+            const urbanValues = Object.values(yearData).map(d => d.urban);
+            const ruralValues = Object.values(yearData).map(d => d.rural);
+            
+            const urbanAvg = (urbanValues.reduce((a, b) => a + b, 0) / urbanValues.length).toFixed(1);
+            const ruralAvg = (ruralValues.reduce((a, b) => a + b, 0) / ruralValues.length).toFixed(1);
+            
+            const maxUrban = Math.max(...urbanValues);
+            const maxRural = Math.max(...ruralValues);
+            const maxUrbanState = Object.entries(yearData).find(([_, d]) => d.urban === maxUrban)[0];
+            const maxRuralState = Object.entries(yearData).find(([_, d]) => d.rural === maxRural)[0];
+
+            document.getElementById('urbanAvg').textContent = `${urbanAvg}%`;
+            document.getElementById('ruralAvg').textContent = `${ruralAvg}%`;
+            document.getElementById('highestUrban').textContent = `${maxUrbanState} (${maxUrban}%)`;
+            document.getElementById('highestRural').textContent = `${maxRuralState} (${maxRural}%)`;
+
+            // Update year display
+            document.getElementById('currentYearMain').textContent = currentYear;
+        }
+
+        function updateView(view) {
+            currentView = view;
+            document.querySelectorAll('.btn').forEach(btn => {
+                if (
+                    (view === 'urban' && btn.classList.contains('btn-primary')) ||
+                    (view === 'rural' && btn.classList.contains('btn-secondary')) ||
+                    (view === 'both' && btn.classList.contains('btn-outline'))
+                ) {
+                    btn.classList.add('btn-active');
+                } else {
+                    btn.classList.remove('btn-active');
+                }
+            });
+            createMap();
+        }
+
+        function updateYear(year) {
+            currentYear = year;
+            document.querySelectorAll('.year-marker').forEach(marker => {
+                marker.classList.toggle('active', marker.querySelector('span').textContent === year.toString());
+            });
+            updateStats();
+            createMap();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createMap();
+            updateStats();
+        });
+    </script>
+</body>
+</html>
