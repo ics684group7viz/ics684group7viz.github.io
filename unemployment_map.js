@@ -198,7 +198,7 @@ async function updateMap(year) {
     .attr("text-anchor", "middle")
     .text("Unemployment Rate");
 
-  updateStatistics();
+    updateStatistics();
 }
 
 // Add zoom behavior
@@ -215,61 +215,56 @@ svg.call(zoom);
 // Add the SVG to the #map container
 document.getElementById("map-container").appendChild(svg.node());
 
+let debounceTimeout;
+
+document.getElementById("yearSlider").addEventListener("input", (event) => {
+  const selectedYear = +event.target.value;
+  document.getElementById("currentYearMain").textContent = selectedYear;
+
+  clearTimeout(debounceTimeout);
+  debounceTimeout = setTimeout(async () => {
+    await updateMap(selectedYear);
+  }, 300);
+});
+
+// Load the initial data for the current slider value
+const initialYear = +document.getElementById("yearSlider").value;
+await updateMap(initialYear);
+
+// Function to color counties based on the unemployment rate or other data
 function colorByRate(data, colorScale) {
   if (!data) return "#ccc";
   return colorScale(data.rate);
 }
 
 function updateStatistics() {
+  // Initialize the sums
   let totalWorkforce = 0;
   let totalUrbanUnemployed = 0;
   let totalRuralUnemployed = 0;
 
+  // Iterate through the counties to sum the relevant values
   counties.features.forEach(feature => {
-    const data = feature.properties.data;
+    const data = feature.properties.data;  // Data for the county
     if (data) {
-      const laborforce = +data.laborforce;
-      const unemployed = +data.unemployed;
+      const laborforce = +data.laborforce;  // Convert laborforce to a number
+      const unemployed = +data.unemployed;  // Convert unemployed to a number
 
+      // Only add to the totals if the values are valid numbers
       if (!isNaN(laborforce)) {
-        totalWorkforce += laborforce;
+        totalWorkforce += laborforce;  // Sum of all county workforce
       }
 
       if (feature.properties.type === "Metro" && !isNaN(unemployed)) {
-        totalUrbanUnemployed += unemployed;
+        totalUrbanUnemployed += unemployed;  // Sum of unemployed in urban counties
       } else if (feature.properties.type === "Nonmetro" && !isNaN(unemployed)) {
-        totalRuralUnemployed += unemployed;
+        totalRuralUnemployed += unemployed;  // Sum of unemployed in rural counties
       }
     }
   });
 
-  document.getElementById("totalPop").textContent = totalWorkforce.toLocaleString();
-  document.getElementById("urbanPop").textContent = totalUrbanUnemployed.toLocaleString();
-  document.getElementById("ruralPop").textContent = totalRuralUnemployed.toLocaleString();
+  // Update the DOM elements with the calculated values
+  document.getElementById("totalPop").textContent = totalWorkforce.toLocaleString();  // Total workforce
+  document.getElementById("urbanPop").textContent = totalUrbanUnemployed.toLocaleString();  // Urban unemployed
+  document.getElementById("ruralPop").textContent = totalRuralUnemployed.toLocaleString();  // Rural unemployed
 }
-
-// Make sure the DOM is fully loaded before running the event listeners
-document.addEventListener("DOMContentLoaded", async () => {
-  const yearSlider = document.getElementById("yearSlider");
-  const currentYearElement = document.getElementById("currentYearMain");
-
-  if (!yearSlider || !currentYearElement) {
-    console.error('Required DOM elements not found!');
-    return;
-  }
-
-  let debounceTimeout;
-
-  yearSlider.addEventListener("input", (event) => {
-    const selectedYear = +event.target.value;
-    currentYearElement.textContent = selectedYear;
-
-    clearTimeout(debounceTimeout);
-    debounceTimeout = setTimeout(async () => {
-      await updateMap(selectedYear);
-    }, 300);
-  });
-
-  const initialYear = +yearSlider.value;
-  await updateMap(initialYear);
-});
